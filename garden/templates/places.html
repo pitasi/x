@@ -1,48 +1,82 @@
+{{define "title"}}places — garden.anto.pt{{end}}
+{{define "description"}}places i've been to or that i'd like to visit.{{end}}
+{{define "screen"}}places{{end}}
+{{define "crumbs"}}
+<nav class="crumbs">
+  <a href="/">index</a>
+  <span class="sep">/</span>
+  <span class="here">places</span>
+</nav>
+{{end}}
 {{define "body"}}
-<h2>places</h2>
-<p>places i've been to or that i'd like to visit</p>
+<div class="titleblock">
+  <h1>places</h1>
+  <p class="lede">places i've been to or that i'd like to visit. click a location to filter the list.</p>
+</div>
 
-<table id="placesTable">
+<div class="toolbar">
+  <div class="search">
+    <span class="icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.2"/><line x1="9.2" y1="9.2" x2="12.5" y2="12.5" stroke-linecap="round"/></svg></span>
+    <input type="search" data-search placeholder="search places…" aria-label="search places" autocomplete="off" />
+  </div>
+  <span class="count-pill" data-count data-noun="places"></span>
+  <span class="sortctl">
+    <label for="sortsel">sort</label>
+    <select id="sortsel" data-sort-select>
+      <option value="added:desc">recently added</option>
+      <option value="added:asc">oldest first</option>
+      <option value="title:asc">title A→Z</option>
+      <option value="title:desc">title Z→A</option>
+      <option value="rating:desc">status (been ↑)</option>
+      <option value="rating:asc">status (want ↑)</option>
+      <option value="imdb:desc">google ↓</option>
+      <option value="imdb:asc">google ↑</option>
+    </select>
+  </span>
+</div>
+
+<div class="table-wrap">
+  <table class="data">
     <thead>
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">My rating</th>
-            <th scope="col">Google Rating</th>
-            <th scope="col">Added on</th>
-        </tr>
+      <tr>
+        <th data-key="title"><span class="th-inner">title <span class="sortcaret">↕</span></span></th>
+        <th class="num" data-key="rating"><span class="th-inner">status <span class="sortcaret">↕</span></span></th>
+        <th class="num" data-key="imdb"><span class="th-inner">google <span class="sortcaret">↕</span></span></th>
+        <th class="num date" data-key="added" aria-sort="descending"><span class="th-inner">added <span class="sortcaret">▼</span></span></th>
+      </tr>
     </thead>
     <tbody>
-        {{ range .Places }}
-        <tr>
-            <th scope="row">
-                <p>{{ if eq .Rating 7 }}⭐ {{ end }}{{ .Title }}</p>
-                <small>
-                    {{ range .Loc }}
-                    <button onclick="onSearchClick(event)">{{ . | prettyLink }}</button>
-                    {{ end }}
-                </small>
-            </th>
-            <td>{{ if .Rating }}{{ .Rating }}/7<a href="/ratings"><sup>[?]</sup></a>{{ else }}-{{ end }}</td>
-            <td>{{ if .ScoreGoogle }}{{ .ScoreGoogle }}/5{{ if .Source }}<a href="{{ .Source }}" target=_blank><sup>[o]</sup></a>{{ end }}{{ end }}</td>
-            <td>{{ .Created | prettyDate }}</td>
-        </tr>
-        {{ end }}
+      {{ range .Places }}
+      <tr>
+        <td class="title" data-sort="{{ sortKey .Title }}" data-extra="{{ range .Loc }}{{ . | prettyLink }} {{ end }}">
+          {{ .Title }}
+          {{ if .Loc }}
+          <span class="locs">{{ range .Loc }}<button type="button" class="loc">{{ . | prettyLink }}</button>{{ end }}</span>
+          {{ end }}
+        </td>
+        <td class="num" data-label="status" data-sort="{{ if .Rating }}1{{ else }}0{{ end }}">
+          {{ if .Rating }}
+          <span class="status been"><span class="star">★</span> been</span>
+          {{ else }}
+          <span class="status want">want</span>
+          {{ end }}
+        </td>
+        <td class="num imdb" data-label="google" data-sort="{{ if .ScoreGoogle }}{{ .ScoreGoogle }}{{ end }}">
+          {{ if .ScoreGoogle }}<span class="num-v">{{ printf "%.1f" .ScoreGoogle }}</span><span class="den">/5</span>{{ if .Source }} <a href="{{ .Source }}" target=_blank>↗</a>{{ end }}{{ else }}<span class="den">—</span>{{ end }}
+        </td>
+        <td class="num date" data-label="added" data-sort="{{ unixTime .Created }}"><span class="date-v">{{ dateShort .Created }}</span></td>
+      </tr>
+      {{ end }}
     </tbody>
-</table>
-<script>
-    let table = new simpleDatatables.DataTable('#placesTable', {
-        paging: false,
-        columns: [
-            { select: [1,2], sortSequence: ["desc", "asc"], },
-            { select: 3, type: "date", format: "YYYY-MM-DD", sortSequence: ["desc", "asc"], },
-        ],
-    });
+  </table>
+</div>
 
-    function onSearchClick(e) {
-        const q = e.target.innerText;
-        const searchInput = document.querySelector(".datatable-input")
-        searchInput.value = q;
-        table.search(q);
-    }
-</script>
+<div class="empty-state" data-empty hidden>
+  <span class="big">🌱</span>
+  nothing here yet — try a different search.
+</div>
+
+<p class="legend">
+  <span><code>★ been</code> = i've been there. <code>want</code> = on my list.</span>
+</p>
 {{ end }}

@@ -1,20 +1,31 @@
+{{define "title"}}ratings — garden.anto.pt{{end}}
+{{define "description"}}how i rate things.{{end}}
+{{define "screen"}}ratings{{end}}
+{{define "crumbs"}}
+<nav class="crumbs">
+  <a href="/">index</a>
+  <span class="sep">/</span>
+  <span class="here">ratings</span>
+</nav>
+{{end}}
 {{define "body"}}
-<h2>ratings</h2>
-<p>copy pasting from <a href="https://stephango.com/vault" target=_blank>Steph Ango's vault description</a>.</p>
+<div class="titleblock">
+  <h1>ratings</h1>
+  <p class="lede">copy pasting from <a href="https://stephango.com/vault" target=_blank>Steph Ango's vault description</a>.</p>
+</div>
 
-<h3>Rating system</h3>
-
-<p>Anything with a rating uses an integer from 1 to 7:</p>
-
-<ul>
-<li>7 — Perfect, must try, life-changing, go out of your way to seek this out
-<li>6 — Excellent, worth repeating
-<li>5 — Good, don’t go out of your way, but enjoyable
-<li>4 — Passable, works in a pinch
-<li>3 — Bad, don’t do this if you can
-<li>2 — Atrocious, actively avoid, repulsive
-<li>1 — Evil, life-changing in a bad way
-</ul>
-
-<p>Why this scale? I like rating out of 7 better than 4 or 5 because I need more granularity at the top, for the good experiences, and 10 is too granular.</p>
+<div class="rail prose">
+  <h2>rating system</h2>
+  <p>Anything with a rating uses an integer from 1 to 7:</p>
+  <ul>
+    <li>7 — Perfect, must try, life-changing, go out of your way to seek this out</li>
+    <li>6 — Excellent, worth repeating</li>
+    <li>5 — Good, don’t go out of your way, but enjoyable</li>
+    <li>4 — Passable, works in a pinch</li>
+    <li>3 — Bad, don’t do this if you can</li>
+    <li>2 — Atrocious, actively avoid, repulsive</li>
+    <li>1 — Evil, life-changing in a bad way</li>
+  </ul>
+  <p>Why this scale? I like rating out of 7 better than 4 or 5 because I need more granularity at the top, for the good experiences, and 10 is too granular.</p>
+</div>
 {{end}}

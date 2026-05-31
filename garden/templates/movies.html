@@ -1,34 +1,79 @@
+{{define "title"}}movies — garden.anto.pt{{end}}
+{{define "description"}}movies i've seen or that i'd like to see.{{end}}
+{{define "screen"}}movies{{end}}
+{{define "crumbs"}}
+<nav class="crumbs">
+  <a href="/">index</a>
+  <span class="sep">/</span>
+  <span class="here">movies</span>
+</nav>
+{{end}}
 {{define "body"}}
-<h2>movies</h2>
-<p>movies i've seen or that i'd like to see</p>
+<div class="titleblock">
+  <h1>movies</h1>
+  <p class="lede">movies i've seen or that i'd like to see. rated on a personal 1–7 scale; <code style="font-size:.92em">—</code> means i haven't watched it yet.</p>
+</div>
 
-<table id="moviesTable">
+<div class="toolbar">
+  <div class="search">
+    <span class="icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.2"/><line x1="9.2" y1="9.2" x2="12.5" y2="12.5" stroke-linecap="round"/></svg></span>
+    <input type="search" data-search placeholder="search titles…" aria-label="search movies" autocomplete="off" />
+  </div>
+  <span class="count-pill" data-count data-noun="titles"></span>
+  <span class="sortctl">
+    <label for="sortsel">sort</label>
+    <select id="sortsel" data-sort-select>
+      <option value="added:desc">recently added</option>
+      <option value="added:asc">oldest first</option>
+      <option value="title:asc">title A→Z</option>
+      <option value="title:desc">title Z→A</option>
+      <option value="rating:desc">my rating ↓</option>
+      <option value="rating:asc">my rating ↑</option>
+      <option value="imdb:desc">imdb ↓</option>
+      <option value="imdb:asc">imdb ↑</option>
+    </select>
+  </span>
+</div>
+
+<div class="table-wrap">
+  <table class="data">
     <thead>
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">My rating</th>
-            <th scope="col">IMDB Rating</th>
-            <th scope="col">Added on</th>
-        </tr>
+      <tr>
+        <th data-key="title"><span class="th-inner">title <span class="sortcaret">↕</span></span></th>
+        <th class="num" data-key="rating"><span class="th-inner">my rating <span class="sortcaret">↕</span></span></th>
+        <th class="num" data-key="imdb"><span class="th-inner">imdb <span class="sortcaret">↕</span></span></th>
+        <th class="num date" data-key="added" aria-sort="descending"><span class="th-inner">added <span class="sortcaret">▼</span></span></th>
+      </tr>
     </thead>
     <tbody>
-        {{ range .Movies }}
-        <tr>
-            <th scope="row">{{ if eq .Rating 7 }}⭐ {{ end }}{{ .Title }}</th>
-            <td>{{ if .Rating }}{{ .Rating }}/7<a href="/ratings"><sup>[?]</sup></a>{{ else }}-{{ end }}</td>
-            <td>{{ if .ScoreIMDB }}{{ .ScoreIMDB }}/10{{ if .Source }}<a href="{{ .Source }}" target=_blank><sup>[o]</sup></a>{{ end }}{{ end }}</td>
-            <td>{{ .Created | prettyDate }}</td>
-        </tr>
-        {{ end }}
+      {{ range .Movies }}
+      <tr>
+        <td class="title" data-sort="{{ sortKey .Title }}">{{ .Title }}</td>
+        <td class="num" data-label="my rating" data-sort="{{ if .Rating }}{{ .Rating }}{{ end }}">
+          {{ if .Rating }}
+          <span class="rating" title="{{ .Rating }} out of 7"><span class="val">{{ .Rating }}<span class="den">/7</span></span><span class="meter">{{ range ratingMeter .Rating }}{{ if . }}<i class="on"></i>{{ else }}<i></i>{{ end }}{{ end }}</span></span>
+          {{ else }}
+          <span class="rating empty" title="not rated yet"><span class="val">—</span><span class="meter">{{ range emptyMeter }}<i></i>{{ end }}</span></span>
+          {{ end }}
+        </td>
+        <td class="num imdb" data-label="imdb" data-sort="{{ if .ScoreIMDB }}{{ .ScoreIMDB }}{{ end }}">
+          {{ if .ScoreIMDB }}<span class="num-v">{{ printf "%.1f" .ScoreIMDB }}</span><span class="den">/10</span>{{ if .Source }} <a href="{{ .Source }}" target=_blank>↗</a>{{ end }}{{ else }}<span class="den">—</span>{{ end }}
+        </td>
+        <td class="num date" data-label="added" data-sort="{{ unixTime .Created }}"><span class="date-v">{{ dateShort .Created }}</span></td>
+      </tr>
+      {{ end }}
     </tbody>
-</table>
-<script>
-    let table = new simpleDatatables.DataTable('#moviesTable', {
-        paging: false,
-        columns: [
-            { select: [1,2], sortSequence: ["desc", "asc"], },
-            { select: 3, type: "date", format: "YYYY-MM-DD", sortSequence: ["desc", "asc"], },
-        ],
-    });
-</script>
+  </table>
+</div>
+
+<div class="empty-state" data-empty hidden>
+  <span class="big">🌱</span>
+  nothing here yet — try a different search.
+</div>
+
+<p class="legend">
+  <span>my rating</span>
+  <span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+  <span><code>5/7</code> = a <a href="/ratings">personal 1–7 scale</a>, low to high. <code>—</code> = not watched yet.</span>
+</p>
 {{ end }}

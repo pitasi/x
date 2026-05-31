@@ -6,11 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"slices"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -24,8 +27,8 @@ import (
 //go:embed templates
 var TemplatesFS embed.FS
 
-//go:embed static/style.css
-var StyleCSS []byte
+//go:embed static
+var StaticFS embed.FS
 
 func main() {
 	obsidianVault := os.Args[1]
@@ -53,44 +56,63 @@ func main() {
 		if slices.Contains(data.Categories, "[[Shows]]") {
 			shows = append(shows, data)
 		}
-
 		if slices.Contains(data.Categories, "[[Movies]]") {
 			movies = append(movies, data)
 		}
-
 		if slices.Contains(data.Categories, "[[Places]]") {
 			places = append(places, data)
 		}
-
 		if slices.Contains(data.Categories, "[[Books]]") {
 			books = append(books, data)
 		}
 	}
 
-	http.HandleFunc("GET /style.css", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("content-type", "text/css")
-		w.WriteHeader(200)
-		_, _ = w.Write(StyleCSS)
-	})
+	sortByCreatedDesc(movies)
+	sortByCreatedDesc(shows)
+	sortByCreatedDesc(books)
+	sortByCreatedDesc(places)
+
+	static, err := fs.Sub(StaticFS, "static")
+	if err != nil {
+		log.Fatal(err)
+	}
+	http.Handle("GET /style.css", http.FileServer(http.FS(static)))
+	http.Handle("GET /app.js", http.FileServer(http.FS(static)))
 
 	http.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-		t, err := template.ParseFS(TemplatesFS, "templates/layout.html", "templates/index.html")
+		t, err := template.New("root").
+			Funcs(templateFuncs()).
+			ParseFS(TemplatesFS, "templates/layout.html", "templates/index.html")
 		if err != nil {
 			log.Println("template: index.html:", err)
 			return
 		}
 
-		_ = t.Execute(w, nil)
+		data := struct {
+			Movies collectionPreview
+			Shows  collectionPreview
+			Books  collectionPreview
+			Places collectionPreview
+		}{
+			Movies: previewFor(movies, 3),
+			Shows:  previewFor(shows, 3),
+			Books:  previewFor(books, 3),
+			Places: previewFor(places, 3),
+		}
+
+		_ = t.ExecuteTemplate(w, "layout.html", data)
 	})
 
 	http.HandleFunc("GET /ratings/{$}", func(w http.ResponseWriter, r *http.Request) {
-		t, err := template.ParseFS(TemplatesFS, "templates/layout.html", "templates/ratings.html")
+		t, err := template.New("root").
+			Funcs(templateFuncs()).
+			ParseFS(TemplatesFS, "templates/layout.html", "templates/ratings.html")
 		if err != nil {
 			log.Println("template: ratings.html:", err)
 			return
 		}
 
-		_ = t.Execute(w, nil)
+		_ = t.ExecuteTemplate(w, "layout.html", nil)
 	})
 
 	http.HandleFunc("GET /shows/{$}", sectionHandler("shows.html", struct {
@@ -115,17 +137,13 @@ func main() {
 	}))
 
 	log.Println("listening on", "0.0.0.0:8080")
-	_ = http.ListenAndServe("0.0.0.0:8080", nil)
+	panic(http.ListenAndServe("0.0.0.0:8080", nil))
 }
 
 func sectionHandler(templateName string, data any) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		t, err := template.New("root").
-			Funcs(template.FuncMap{
-				"prettyDate": prettyDate,
-				"yyyymmdd":   yyyymmdd,
-				"prettyLink": prettyLinks,
-			}).
+			Funcs(templateFuncs()).
 			ParseFS(TemplatesFS, "templates/layout.html", "templates/"+templateName)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -142,6 +160,70 @@ func sectionHandler(templateName string, data any) http.HandlerFunc {
 			return
 		}
 	}
+}
+
+func templateFuncs() template.FuncMap {
+	return template.FuncMap{
+		"prettyDate": prettyDate,
+		"yyyymmdd":   yyyymmdd,
+		"prettyLink": prettyLinks,
+		"sortKey":    sortKey,
+		"ratingMeter": func(rating int) []bool {
+			m := make([]bool, 7)
+			for i := 0; i < rating && i < 7; i++ {
+				m[i] = true
+			}
+			return m
+		},
+		"emptyMeter": func() []bool { return make([]bool, 7) },
+		"dateShort": func(t time.Time) string {
+			if t.IsZero() {
+				return "—"
+			}
+			return t.Format("2006-01-02")
+		},
+		"unixTime": func(t time.Time) string {
+			if t.IsZero() {
+				return ""
+			}
+			return strconv.FormatInt(t.Unix(), 10)
+		},
+	}
+}
+
+type collectionPreview struct {
+	Count int
+	Items []frontmatterData
+}
+
+func previewFor(items []frontmatterData, n int) collectionPreview {
+	sorted := make([]frontmatterData, len(items))
+	copy(sorted, items)
+	sortByCreatedDesc(sorted)
+	if len(sorted) > n {
+		sorted = sorted[:n]
+	}
+	return collectionPreview{Count: len(items), Items: sorted}
+}
+
+func sortByCreatedDesc(items []frontmatterData) {
+	sort.SliceStable(items, func(i, j int) bool {
+		ai, bi := items[i].Created, items[j].Created
+		if !ai.Equal(bi) {
+			return ai.After(bi)
+		}
+		return sortKey(items[i].Title) < sortKey(items[j].Title)
+	})
+}
+
+func sortKey(s string) string {
+	low := strings.ToLower(strings.TrimSpace(s))
+	for _, prefix := range []string{"the ", "a ", "an "} {
+		if rest, ok := strings.CutPrefix(low, prefix); ok {
+			return rest
+		}
+	}
+	return low
 }
 
 type frontmatterData struct {

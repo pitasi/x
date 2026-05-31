@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>antonio pitasi's digital garden</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sono:wght@200..800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
-    <link rel="stylesheet" type="text/css" href="/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{block "title" .}}garden.anto.pt{{end}}</title>
+  <meta name="description" content="{{block "description" .}}a personal garden — movies, tv, books and places i've enjoyed or want to.{{end}}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-    <header>
-        <a href="/">👨‍🌾 garden.anto.pt</a>
-    </header>
-    <main class="content">
-    {{block "body" .}}Nothing to see here{{end}}
-    </main>
-    <footer>
-        <div class="socials">
-            <a href="https://github.com/pitasi">github</a>
-            <a href="https://bsky.app/anto.pt">bluesky</a>
-            <a href="https://anto.ph">photos</a>
-            <a href="https://anto.pt">blog</a>
-            <a href="https://github.com/Pitasi/x/tree/main/garden">[src code]</a>
-        </div>
-        an indie website by <a href=https://anto.pt>antonio pitasi</a>
-    </footer>
+<div class="page" data-screen-label="{{block "screen" .}}page{{end}}">
+
+  <header class="masthead">
+    <a class="brand" href="/">
+      <span class="sprout">🧑‍🌾</span><span>garden<span class="dim">.anto.pt</span></span>
+    </a>
+    {{block "crumbs" .}}{{end}}
+  </header>
+
+  <main>
+  {{block "body" .}}Nothing to see here{{end}}
+  </main>
+
+  <footer class="foot">
+    <nav>
+      <a href="https://github.com/pitasi">github</a>
+      <a href="https://bsky.app/anto.pt">bluesky</a>
+      <a href="https://anto.ph">photos</a>
+      <a href="https://anto.pt">blog</a>
+      <a href="https://github.com/Pitasi/x/tree/main/garden">[src code]</a>
+    </nav>
+    <p class="by">an indie website by <a href="https://anto.pt">antonio pitasi</a></p>
+  </footer>
+
+</div>
+<script src="/app.js"></script>
 </body>
 </html>

@@ -1,11 +1,62 @@
+{{define "title"}}garden.anto.pt{{end}}
+{{define "screen"}}index{{end}}
 {{define "body"}}
-<h2>index</h2>
-<h3><a href="/movies">movies</a></h3>
-<p>movies i've seen or that i'd like to see</p>
-<h3><a href="/shows">tv shows</a></h3>
-<p>tv shows i've seen or that i'd like to see</p>
-<h3><a href="/books">books</a></h3>
-<p>titles i've read or that i'd like to read</p>
-<h3><a href="/places">places</a></h3>
-<p>places i've been to or that i'd like to visit</p>
+<div class="titleblock">
+  <h1>index</h1>
+  <p class="lede">a little corner of the internet where i keep track of things i've enjoyed — or hope to. tend it like a garden.</p>
+</div>
+
+<section class="collection-preview">
+  <article class="prev-card">
+    <a class="head" href="/movies" style="text-decoration:none;">
+      <span class="top"><span class="name">movies</span><span class="count">{{ .Movies.Count }} titles</span></span>
+      <span class="desc">movies i've seen or that i'd like to see</span>
+    </a>
+    <ul class="prev-list">
+      {{ range .Movies.Items }}
+      <li><span class="t">{{ .Title }}</span><span class="r">{{ if .Rating }}{{ .Rating }}/7{{ else }}—{{ end }}</span></li>
+      {{ end }}
+    </ul>
+    <a class="more" href="/movies">all {{ .Movies.Count }} movies <span class="arrow">→</span></a>
+  </article>
+
+  <article class="prev-card">
+    <a class="head" href="/shows" style="text-decoration:none;">
+      <span class="top"><span class="name">tv shows</span><span class="count">{{ .Shows.Count }} shows</span></span>
+      <span class="desc">tv shows i've seen or that i'd like to see</span>
+    </a>
+    <ul class="prev-list">
+      {{ range .Shows.Items }}
+      <li><span class="t">{{ .Title }}</span><span class="r">{{ if .Rating }}{{ .Rating }}/7{{ else }}—{{ end }}</span></li>
+      {{ end }}
+    </ul>
+    <a class="more" href="/shows">all {{ .Shows.Count }} shows <span class="arrow">→</span></a>
+  </article>
+
+  <article class="prev-card">
+    <a class="head" href="/books" style="text-decoration:none;">
+      <span class="top"><span class="name">books</span><span class="count">{{ .Books.Count }} titles</span></span>
+      <span class="desc">titles i've read or that i'd like to read</span>
+    </a>
+    <ul class="prev-list">
+      {{ range .Books.Items }}
+      <li><span class="t">{{ .Title }}</span><span class="r">{{ if .Rating }}{{ .Rating }}/7{{ else }}—{{ end }}</span></li>
+      {{ end }}
+    </ul>
+    <a class="more" href="/books">all {{ .Books.Count }} books <span class="arrow">→</span></a>
+  </article>
+
+  <article class="prev-card">
+    <a class="head" href="/places" style="text-decoration:none;">
+      <span class="top"><span class="name">places</span><span class="count">{{ .Places.Count }} places</span></span>
+      <span class="desc">places i've been to or that i'd like to visit</span>
+    </a>
+    <ul class="prev-list">
+      {{ range .Places.Items }}
+      <li><span class="t">{{ .Title }}</span><span class="r">{{ if .Rating }}★ been{{ else }}want{{ end }}</span></li>
+      {{ end }}
+    </ul>
+    <a class="more" href="/places">all {{ .Places.Count }} places <span class="arrow">→</span></a>
+  </article>
+</section>
 {{end}}
