@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{ template "ap.headcommon" . }}
+<title>all photos — antonio pitasi</title>
+<meta name="description" content="Reverse-chronological archive of all photos by Antonio Pitasi.">
+{{ template "ap.styles" . }}
+</head>
+<body>
+
+{{ template "ap.siteheader" . }}
+
+<main id="view" tabindex="-1" class="wrap">
+  <div class="view-head">
+    <h1>all photos</h1>
+    <span class="count">{{ .Total }} frames · {{ len .Sections }} years</span>
+    <span class="spacer"></span>
+    <span class="ascii">$ ls -t ~/photos</span>
+  </div>
+  <p class="lede">The complete roll, newest first — a contact-sheet log of everywhere the camera's been.</p>
+
+  {{ range .Sections }}
+  <section>
+    <div class="year">
+      <h2>{{ .Title }}</h2>
+      <span class="count">{{ len .Imgs }} {{ if eq (len .Imgs) 1 }}frame{{ else }}frames{{ end }}</span>
+      <span class="spacer"></span>
+    </div>
+    {{ $month := "" }}
+    {{ range $i, $img := .Imgs }}
+      {{ $thisMonth := monthLabel $img.Meta.Date }}
+      {{ if ne $thisMonth $month }}
+        {{ if $month }}</div>{{ end }}
+        <p class="month">{{ $thisMonth }}</p>
+        <div class="feed">
+        {{ $month = $thisMonth }}
+      {{ end }}
+      <a class="thumb" href="{{ if $img.URL }}{{ $img.URL }}{{ else }}/pic/{{ $img.ID }}{{ end }}" id="{{ $img.ID }}">
+        <span class="frame">
+          <img
+            src="{{ $img.CanonicalURL }}/q_500.webp"
+            srcset="
+              {{ if ge $img.Meta.Width 500 }}{{ $img.CanonicalURL }}/q_500.webp 500w,{{ end }}
+              {{ if ge $img.Meta.Width 1000 }}{{ $img.CanonicalURL }}/q_1000.webp 1000w,{{ end }}
+            "
+            sizes="(max-width:620px) 50vw, (max-width:880px) 25vw, 16vw"
+            width="500" height="500"
+            alt="{{ $img.Alt }}"
+            {{ if gt $i 5 }}loading="lazy" decoding="async"{{ else }}decoding="async"{{ end }}>
+        </span>
+        <span class="cap"><span class="pid">#{{ $img.ShortID }}</span><span>{{ $img.Meta.Date.Format "01-02" }}</span></span>
+      </a>
+    {{ end }}
+    {{ if $month }}</div>{{ end }}
+  </section>
+  {{ end }}
+</main>
+
+{{ template "ap.sitefooter" . }}
+</body>
+</html>

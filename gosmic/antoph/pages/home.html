@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{ template "ap.headcommon" . }}
+<title>photos — antonio pitasi</title>
+<meta name="description" content="Street photography &amp; wanderings — a small self-hosted photo archive by Antonio Pitasi.">
+{{ template "ap.styles" . }}
+</head>
+<body>
+
+{{ template "ap.siteheader" . }}
+
+<main id="view" tabindex="-1" class="wrap">
+  <div class="view-head">
+    <h1># top pic(k)s</h1>
+    <span class="count">{{ len .Featured }} selected</span>
+    <span class="spacer"></span>
+    <span class="ascii">selected by hand, not by algorithm</span>
+  </div>
+  <p class="lede">A rotating edit of frames I keep coming back to. The full roll lives in <a href="/all">/all</a> — {{ .Total }} photos and counting.</p>
+
+  <div class="sheet">
+    {{ range $i, $img := .Featured }}
+    {{ $feat := $img.FeatClass $i }}
+    <a class="cell{{ if $feat }} {{ $feat }}{{ end }}" href="{{ if $img.URL }}{{ $img.URL }}{{ else }}/pic/{{ $img.ID }}{{ end }}">
+      <span class="frame">
+        <img
+          src="{{ $img.CanonicalURL }}/q_500.webp"
+          srcset="
+            {{ if ge $img.Meta.Width 500 }}{{ $img.CanonicalURL }}/q_500.webp 500w,{{ end }}
+            {{ if ge $img.Meta.Width 1000 }}{{ $img.CanonicalURL }}/q_1000.webp 1000w,{{ end }}
+            {{ if ge $img.Meta.Width 2000 }}{{ $img.CanonicalURL }}/q_2000.webp 2000w,{{ end }}
+          "
+          sizes="(max-width:620px) 50vw, 25vw"
+          width="500" height="500"
+          alt="{{ $img.Alt }}"
+          {{ if gt $i 3 }}loading="lazy" decoding="async"{{ else }}fetchpriority="high" decoding="async"{{ end }}>
+        <span class="id">#{{ $img.ShortID }}</span>
+        <span class="cap">
+          <span class="meta">{{ $img.Meta.Date.Year }}{{ if $img.Meta.Lens }} · {{ $img.Meta.Lens }}{{ end }}</span>
+        </span>
+      </span>
+    </a>
+    {{ end }}
+  </div>
+
+  {{ if .Tags }}
+  <p class="section-label">browse by place &amp; tag</p>
+  <nav class="tagwall" aria-label="Tags">
+    {{ range .Tags }}<a href="/tags/{{ .Name }}/">#{{ .Name }}<span class="n">{{ .Count }}</span></a>{{ end }}
+  </nav>
+  {{ end }}
+</main>
+
+{{ template "ap.sitefooter" . }}
+</body>
+</html>

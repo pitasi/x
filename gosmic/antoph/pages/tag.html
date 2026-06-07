@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{ template "ap.headcommon" . }}
+<title>#{{ .Tag }} — photos — antonio pitasi</title>
+<meta name="description" content="Photos tagged #{{ .Tag }} by Antonio Pitasi.">
+{{ template "ap.styles" . }}
+</head>
+<body>
+
+{{ template "ap.siteheader" . }}
+
+<main id="view" tabindex="-1" class="wrap">
+  <p class="backline"><a href="/">← home</a> &nbsp;/&nbsp; <a href="/all">all photos</a></p>
+  <div class="view-head">
+    <h1>#{{ .Tag }}</h1>
+    <span class="count">{{ len .Imgs }} {{ if eq (len .Imgs) 1 }}photo{{ else }}photos{{ end }}</span>
+    <span class="spacer"></span>
+    <span class="ascii">/tags/{{ .Tag }}</span>
+  </div>
+
+  {{ if .Imgs }}
+  <div class="feed">
+    {{ range $i, $img := .Imgs }}
+    <a class="thumb" href="{{ if $img.URL }}{{ $img.URL }}{{ else }}/pic/{{ $img.ID }}{{ end }}" id="{{ $img.ID }}">
+      <span class="frame">
+        <img
+          src="{{ $img.CanonicalURL }}/q_500.webp"
+          srcset="
+            {{ if ge $img.Meta.Width 500 }}{{ $img.CanonicalURL }}/q_500.webp 500w,{{ end }}
+            {{ if ge $img.Meta.Width 1000 }}{{ $img.CanonicalURL }}/q_1000.webp 1000w,{{ end }}
+          "
+          sizes="(max-width:620px) 50vw, (max-width:880px) 25vw, 16vw"
+          width="500" height="500"
+          alt="{{ $img.Alt }}"
+          {{ if gt $i 5 }}loading="lazy" decoding="async"{{ else }}decoding="async"{{ end }}>
+      </span>
+      <span class="cap"><span class="pid">#{{ $img.ShortID }}</span><span>{{ $img.Meta.Date.Format "2006-01-02" }}</span></span>
+    </a>
+    {{ end }}
+  </div>
+  {{ else }}
+  <p class="lede">No photos tagged <b>#{{ .Tag }}</b> yet.</p>
+  {{ end }}
+</main>
+
+{{ template "ap.sitefooter" . }}
+</body>
+</html>

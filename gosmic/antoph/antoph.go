@@ -48,6 +48,48 @@ type Section struct {
 	Imgs  []Img
 }
 
+// TagCount is a tag name with its associated photo count, used for the tag
+// wall and tag-page headers.
+type TagCount struct {
+	Name  string
+	Count int
+}
+
+// baseData carries the shared header chrome (active nav route + pathbar text).
+type baseData struct {
+	Route string // "home", "all", "tags", or "" for photo detail
+	Path  string // shown in the header pathbar
+}
+
+type HomeData struct {
+	baseData
+	Featured []Img
+	Tags     []TagCount
+	Total    int
+}
+
+type AllData struct {
+	baseData
+	Sections []Section // one per year, sorted desc
+	Total    int
+}
+
+type TagData struct {
+	baseData
+	Tag  string
+	Imgs []Img
+}
+
+// ImgPageData wraps a single Img with the chrome and back-link metadata needed
+// by the photo-detail template. Img is embedded so all of the existing display
+// fields stay accessible as `.ID`, `.Meta`, `.Nav`, etc.
+type ImgPageData struct {
+	Img
+	baseData
+	BackURL   string
+	BackLabel string
+}
+
 type Img struct {
 	ID           string
 	CanonicalURL template.URL
@@ -80,6 +122,70 @@ func (i Img) PreloadElement() template.HTML {
             imagesizes="(max-width: 1200px) 1200px, (max-width: 1900px) 1900px, 2500px">`,
 		i.CanonicalURL, i.Srcset())
 	return template.HTML(s)
+}
+
+// ShortID returns a compact label for the photo ID, suitable for in-frame badges.
+// Mirrors the timestamp_hash convention on anto.ph: returns the trailing
+// underscore-suffix when present; otherwise the last 6 characters.
+func (i Img) ShortID() string {
+	id := i.ID
+	if idx := strings.LastIndex(id, "_"); idx >= 0 && idx < len(id)-1 {
+		return id[idx+1:]
+	}
+	if len(id) > 6 {
+		return id[len(id)-6:]
+	}
+	return id
+}
+
+func (i Img) FirstKeyword() string {
+	for _, k := range i.Meta.Keywords {
+		if k != "" {
+			return k
+		}
+	}
+	return ""
+}
+
+func (i Img) Alt() string {
+	if kw := i.FirstKeyword(); kw != "" {
+		return fmt.Sprintf("Photo from %s, %s", kw, i.Meta.Date.Format("2 Jan 2006"))
+	}
+	return fmt.Sprintf("Photo taken on %s", i.Meta.Date.Format("2 Jan 2006"))
+}
+
+func (i Img) Exposure() string {
+	var parts []string
+	if i.Meta.Aperture != "" {
+		parts = append(parts, "f/"+i.Meta.Aperture)
+	}
+	if i.Meta.ShutterSpeed != "" {
+		parts = append(parts, i.Meta.ShutterSpeed+"s")
+	}
+	if i.Meta.ISO != 0 {
+		parts = append(parts, fmt.Sprintf("iso %d", i.Meta.ISO))
+	}
+	return strings.Join(parts, " · ")
+}
+
+// FeatClass returns the contact-sheet cell modifier ("big", "wide", "tall", or "")
+// for the photo at position idx in a featured grid. The classification is derived
+// from aspect ratio so the layout adapts to the actual photo set.
+func (i Img) FeatClass(idx int) string {
+	if i.Meta.Width == 0 || i.Meta.Height == 0 {
+		return ""
+	}
+	ratio := float64(i.Meta.Width) / float64(i.Meta.Height)
+	if idx == 0 && ratio >= 1.2 {
+		return "big"
+	}
+	if ratio < 0.85 {
+		return "tall"
+	}
+	if ratio >= 1.7 {
+		return "wide"
+	}
+	return ""
 }
 
 type ImgMeta struct {
@@ -322,51 +428,56 @@ func (Website) Register(devmode bool) http.Handler {
 	}
 
 	imgs.Sort()
-	imgsByYear := byYear(imgs)
 	imgsByKeywords := byKeywords(imgs)
 
-	var keywords []string
-	for k := range imgsByKeywords {
-		keywords = append(keywords, k)
+	var tagCounts []TagCount
+	for k, v := range imgsByKeywords {
+		tagCounts = append(tagCounts, TagCount{Name: k, Count: v.Len()})
 	}
-	sort.Strings(keywords)
-
-	var data = Index{
-		Tags: keywords,
-	}
-	for y, imgs := range imgsByYear {
-		data.Sections = append(data.Sections, Section{
-			Title: strconv.Itoa(y),
-			Imgs:  imgs,
-		})
-	}
-	sort.Slice(data.Sections, func(i, j int) bool { return data.Sections[i].Title > data.Sections[j].Title })
+	sort.Slice(tagCounts, func(i, j int) bool {
+		if tagCounts[i].Count != tagCounts[j].Count {
+			return tagCounts[i].Count > tagCounts[j].Count
+		}
+		return tagCounts[i].Name < tagCounts[j].Name
+	})
 
 	t := templates.New(fsx.Or(devmode, resources, "./antoph"), devmode, template.FuncMap{
 		"prettyDate": prettyDate,
+		"monthLabel": func(t time.Time) string { return strings.ToLower(t.Format("Jan")) },
 	})
 
 	featuredView := newFeaturedView(imgs)
+	allView := newAllView(imgs)
+	allViewData := allView.ByYear()
+
+	allData := AllData{
+		baseData: baseData{Route: "all", Path: "/all"},
+		Sections: allViewData.Sections,
+		Total:    len(imgs),
+	}
 
 	if len(featured) == 0 {
-		// fallback: homepage show all the images
+		// fallback: homepage shows the whole archive
 		mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-			t.Render(w, "index.html", data)
+			t.Render(w, "all.html", AllData{
+				baseData: baseData{Route: "home", Path: "/"},
+				Sections: allViewData.Sections,
+				Total:    len(imgs),
+			})
 		})
 	} else {
 		mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-			t.Render(w, "index.html", Index{
-				Sections: []Section{{Title: "Top pic(k)s", Imgs: featuredView.Images()}},
-				Tags:     keywords,
+			t.Render(w, "home.html", HomeData{
+				baseData: baseData{Route: "home", Path: "/"},
+				Featured: featuredView.Images(),
+				Tags:     tagCounts,
+				Total:    len(imgs),
 			})
 		})
 	}
 
-	allView := newAllView(imgs)
-	allViewData := allView.ByYear()
-
 	mux.HandleFunc("GET /all/{$}", func(w http.ResponseWriter, r *http.Request) {
-		t.Render(w, "index.html", allViewData)
+		t.Render(w, "all.html", allData)
 	})
 
 	mux.HandleFunc("GET /all/pic/{id}", func(w http.ResponseWriter, r *http.Request) {
@@ -380,7 +491,12 @@ func (Website) Register(devmode bool) http.Handler {
 		if !devmode {
 			w.Header().Set("Cache-Control", "public, max-age=300")
 		}
-		t.Render(w, "image.html", img)
+		t.Render(w, "image.html", ImgPageData{
+			Img:       img,
+			baseData:  baseData{Path: "/all/pic/" + id},
+			BackURL:   "/all",
+			BackLabel: "all photos",
+		})
 	})
 
 	mux.HandleFunc("GET /random/{$}", func(w http.ResponseWriter, r *http.Request) {
@@ -407,7 +523,12 @@ func (Website) Register(devmode bool) http.Handler {
 		if !devmode {
 			w.Header().Set("Cache-Control", "public, max-age=300")
 		}
-		t.Render(w, "image.html", img)
+		t.Render(w, "image.html", ImgPageData{
+			Img:       img,
+			baseData:  baseData{Path: "/pic/" + id},
+			BackURL:   "/",
+			BackLabel: "selected",
+		})
 	})
 
 	mux.HandleFunc("GET /tags/{tag}/", func(w http.ResponseWriter, r *http.Request) {
@@ -418,13 +539,10 @@ func (Website) Register(devmode bool) http.Handler {
 			return
 		}
 
-		t.Render(w, "index.html", Index{
-			Sections: []Section{
-				{
-					Title: fmt.Sprintf("#%s (%d photos)", tag, view.Len()),
-					Imgs:  view.Images(),
-				},
-			},
+		t.Render(w, "tag.html", TagData{
+			baseData: baseData{Route: "tags", Path: "/tags/" + tag + "/"},
+			Tag:      tag,
+			Imgs:     view.Images(),
 		})
 	})
 
@@ -437,7 +555,8 @@ func (Website) Register(devmode bool) http.Handler {
 			return
 		}
 
-		img, ok := view.Get(r.PathValue("id"))
+		id := r.PathValue("id")
+		img, ok := view.Get(id)
 		if !ok {
 			http.NotFound(w, r)
 			return
@@ -446,7 +565,12 @@ func (Website) Register(devmode bool) http.Handler {
 		if !devmode {
 			w.Header().Set("Cache-Control", "public, max-age=300")
 		}
-		t.Render(w, "image.html", img)
+		t.Render(w, "image.html", ImgPageData{
+			Img:       img,
+			baseData:  baseData{Path: "/tags/" + tag + "/pic/" + id},
+			BackURL:   "/tags/" + tag + "/",
+			BackLabel: "#" + tag,
+		})
 	})
 
 	imageFilenames := []string{
