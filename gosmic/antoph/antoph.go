@@ -2,6 +2,7 @@ package antoph
 
 import (
 	"embed"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io/fs"
@@ -88,6 +89,39 @@ type ImgPageData struct {
 	baseData
 	BackURL   string
 	BackLabel string
+}
+
+// SpeculationRules emits a <script type="speculationrules"> block that tells
+// Chromium browsers to prerender the previous/next photo pages, so navigation
+// becomes effectively instant. Other browsers ignore the rules and fall back
+// to the regular prefetch + image preload links above. Returns "" when there
+// is nothing to prerender.
+//
+// Note: this is returned as template.HTML rather than template.JS because
+// html/template only recognizes well-known script MIME types as JS contexts
+// and would otherwise HTML-escape the JSON quote characters.
+func (p ImgPageData) SpeculationRules() template.HTML {
+	var urls []string
+	if p.Nav.Prev != nil {
+		urls = append(urls, string(p.Nav.Prev.URL))
+	}
+	if p.Nav.Next != nil {
+		urls = append(urls, string(p.Nav.Next.URL))
+	}
+	if len(urls) == 0 {
+		return ""
+	}
+	b, err := json.Marshal(map[string]any{
+		"prerender": []map[string]any{{
+			"source":    "list",
+			"eagerness": "eager",
+			"urls":      urls,
+		}},
+	})
+	if err != nil {
+		return ""
+	}
+	return template.HTML(fmt.Sprintf(`<script type="speculationrules">%s</script>`, b))
 }
 
 type Img struct {

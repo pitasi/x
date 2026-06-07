@@ -149,9 +149,24 @@ func TestImageTemplate(t *testing.T) {
 		"/pic/2025-07-02_17:14:32_b424/w_2500.webp",
 		"/pic/2025-07-02_17:14:32_b424/w_1200.webp",
 		"← selected", "older ›",
+		`type="speculationrules"`, `"prerender"`, `"eagerness":"eager"`,
+		"/pic/2025-06-27_17:36:38_7288",
 	} {
 		if !strings.Contains(body, want) {
 			t.Errorf("image: missing %q in body", want)
+		}
+	}
+}
+
+func TestSharedStyles(t *testing.T) {
+	tpl := newTestTemplates(t)
+	body := renderOK(t, tpl, "home.html", HomeData{
+		baseData: baseData{Route: "home", Path: "/"},
+		Featured: sampleImgs(),
+	})
+	for _, want := range []string{"@view-transition", "document.prerendering"} {
+		if !strings.Contains(body, want) {
+			t.Errorf("shared chrome: missing %q in body", want)
 		}
 	}
 }

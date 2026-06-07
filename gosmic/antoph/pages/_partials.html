@@ -7,11 +7,30 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-<script defer data-domain="anto.ph" src="/js/ps.js"></script>
+<script>
+  // Defer Plausible until the page is actually shown — prerendered pages
+  // shouldn't count as a view until the user activates them.
+  (function(){
+    function load(){
+      var s = document.createElement('script');
+      s.defer = true;
+      s.setAttribute('data-domain', 'anto.ph');
+      s.src = '/js/ps.js';
+      document.head.appendChild(s);
+    }
+    if (document.prerendering) {
+      document.addEventListener('prerenderingchange', load, { once: true });
+    } else {
+      load();
+    }
+  })();
+</script>
 {{ end }}
 
 {{ define "ap.styles" }}
 <style>
+  @view-transition { navigation: auto; }
+
   :root{
     --paper:#f4f1e8;
     --paper-2:#ebe7d9;
