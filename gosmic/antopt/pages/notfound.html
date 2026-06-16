@@ -2,28 +2,30 @@
 <html lang="en">
   <head>
     {{ template "base-headers" .BaseHeaders }}
-    <title>oops - Antonio Pitasi</title>
-    <meta name="description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <title>Not found — anto.pt</title>
+    <meta name="description" content="This page was not found.">
     <meta property="og:site_name" content="Antonio Pitasi">
     <meta property="og:url" content="https://anto.pt/">
-    <meta property="og:title" content="Antonio Pitasi">
-    <meta property="og:description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <meta property="og:title" content="Not found — Antonio Pitasi">
+    <meta property="og:description" content="This page was not found.">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://anto.pt/socialimg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anto.pt/socialimg">
     <meta name="twitter:site" content="@zaphodias">
     <meta name="twitter:creator" content="@zaphodias">
-    <meta name="twitter:title" content="Antonio Pitasi">
-    <meta name="twitter:description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <meta name="twitter:title" content="Not found — Antonio Pitasi">
+    <meta name="twitter:description" content="This page was not found.">
   </head>
   <body>
     <div class="content">
       {{ template "nav.html" .Nav }}
-        This page was not found. :(
-      <br>
-      <a href="/" class="btn-action">Go home, you're lost</a>
+      <main class="wrap">
+        <p class="kicker"><span class="tilde">~/</span>404</p>
+        <h1 class="post-title">This page was not found.</h1>
+        <p class="muted" style="margin-top:12px"><a href="/">← go home, you're lost</a></p>
+      </main>
+      {{ template "footer.html" . }}
     </div>
-    {{ template "footer.html" }}
   </body>
 </html>

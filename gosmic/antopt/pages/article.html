@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     {{ template "base-headers" .BaseHeaders }}
-    <title>{{ .Article.Title }} - Antonio Pitasi</title>
+    <title>{{ .Article.Title }} — anto.pt</title>
     <meta name="description" content="{{ .Article.Description }}">
     <meta property="og:site_name" content="Antonio Pitasi">
     <meta property="og:url" content="https://anto.pt/articles/{{ .Article.Slug }}">
@@ -20,13 +20,27 @@
   <body>
     <div class="content">
       {{ template "nav.html" .Nav }}
-      <article>
-        <h1>{{ .Article.Title }}</h1>
-        <p class="date">Written on {{ .Article.Date.Format "02 Jan, 2006" }}.</p>
-        {{ .Article.Content }}
-      </article>
-      {{ template "intro.html" }}
+      <main class="wrap">
+        {{ template "now-playing" }}
+
+        <a class="backlink" href="/">← ~/writing</a>
+
+        <article>
+          <header class="post-head">
+            <h1 class="post-title">{{ .Article.Title }}</h1>
+            <div class="post-meta">
+              <time datetime="{{ .Article.Date.Format "2006-01-02" }}">{{ .Article.Date.Format "2006-01-02" }}</time>
+            </div>
+          </header>
+
+          <div class="prose">
+            {{ .Article.Content }}
+          </div>
+        </article>
+
+        {{ template "intro.html" }}
+      </main>
+      {{ template "footer.html" . }}
     </div>
-    {{ template "footer.html" }}
   </body>
 </html>

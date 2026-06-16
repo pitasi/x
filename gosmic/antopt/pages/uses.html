@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     {{ template "base-headers" .BaseHeaders }}
-    <title>{{ .App.Title }} - Antonio Pitasi</title>
-    <meta name="description" content="I have been using {{ .App.Title }}, check it out!">
+    <title>{{ .App.Title }} — uses — anto.pt</title>
+    <meta name="description" content="Why {{ .App.Title }} is part of what Antonio Pitasi uses.">
     <meta property="og:site_name" content="Antonio Pitasi">
     <meta property="og:url" content="https://anto.pt/uses/{{ .App.Slug }}">
     <meta property="og:title" content="{{ .App.Title }}">
@@ -20,15 +20,23 @@
   <body>
     <div class="content">
       {{ template "nav.html" .Nav }}
-      <article class="uses">
-        <div class="uses-title">
-          <img src="{{ .App.Icon }}" loading=lazy>
-          <h1>{{ .App.Title }}</h1>
-        </div>
-        {{ .App.Content }}
-        <a href="{{ .App.URL }}" target=_blank>Visit website</a>
-      </article>
+      <main class="wrap">
+        {{ template "now-playing" }}
+
+        <a class="backlink" href="/uses">← ~/uses</a>
+
+        <article class="use-detail">
+          <header class="post-head">
+            <h1 class="post-title">{{ .App.Title }}</h1>
+            <div class="field"><span class="label">site</span><a href="{{ .App.URL }}" target="_blank" rel="noopener">{{ .App.URL }} ↗</a></div>
+          </header>
+
+          <div class="prose">
+            {{ .App.Content }}
+          </div>
+        </article>
+      </main>
+      {{ template "footer.html" . }}
     </div>
-    {{ template "footer.html" }}
   </body>
 </html>

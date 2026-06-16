@@ -1,8 +1,8 @@
 <div class="color-picker">
-    <button class="toggle" id="toggleBtn"></button>
+    <button class="toggle" id="toggleBtn" aria-label="Change background color" title="Change background color"></button>
     <dialog id="colorDialog">
         <div class="color-options">
-            <button class="color-option" id="colorClose" aria-label="Close background color picker">X</button>
+            <button class="color-option" id="colorClose" aria-label="Close background color picker">×</button>
             {{ range .Colors }}
             <button
                 {{ if eq $.Selected . }}
@@ -12,7 +12,7 @@
                 {{ end }}
                 style="background-color: {{ . }}"
                 data-color="{{ . }}"
-                aria-label="Open background color picker"
+                aria-label="Set background color"
             >{{ if eq $.Selected . }}✌️{{ end }}</button>
             {{ end }}
         </div>
@@ -29,35 +29,33 @@
     </form>
 
     <script>
-        const toggleBtn = document.getElementById("toggleBtn");
-        const colorDialog = document.getElementById("colorDialog");
-        const colorOptions = document.querySelectorAll(".color-option");
-        const colorForm = document.getElementById("colorForm");
-        const selectedColorInput = document.getElementById("selectedColor");
-        const redirectToInput = document.getElementById("redirectTo");
-        redirectToInput.value = window.location.pathname;
+        (function () {
+            const toggleBtn = document.getElementById("toggleBtn");
+            const colorDialog = document.getElementById("colorDialog");
+            const colorOptions = document.querySelectorAll(".color-option");
+            const colorForm = document.getElementById("colorForm");
+            const selectedColorInput = document.getElementById("selectedColor");
+            const redirectToInput = document.getElementById("redirectTo");
+            redirectToInput.value = window.location.pathname;
 
-        toggleBtn.addEventListener("click", () => {
-            colorDialog.showModal();
-            const wrapper = toggleBtn.offsetParent;
-            const centerOffset = colorOptions[0].getBoundingClientRect().width / 2;
-            colorDialog.style.left = wrapper.offsetLeft + centerOffset + "px";
-            colorDialog.style.top = wrapper.offsetTop + "px";
-        });
+            toggleBtn.addEventListener("click", () => {
+                colorDialog.showModal();
+                const r = toggleBtn.getBoundingClientRect();
+                colorDialog.style.top = (r.bottom + 8) + "px";
+                colorDialog.style.right = (window.innerWidth - r.right) + "px";
+            });
 
-        colorOptions.forEach((option) => {
-            if (option.id === "colorClose") {
+            colorOptions.forEach((option) => {
+                if (option.id === "colorClose") {
+                    option.addEventListener("click", () => colorDialog.close());
+                    return;
+                }
                 option.addEventListener("click", () => {
+                    selectedColorInput.value = option.getAttribute("data-color");
+                    colorForm.submit();
                     colorDialog.close();
                 });
-                return;
-            }
-            option.addEventListener("click", () => {
-                const selectedColor = option.getAttribute("data-color");
-                selectedColorInput.value = selectedColor;
-                colorForm.submit();
-                colorDialog.close();
             });
-        });
+        })();
     </script>
 </div>

@@ -1,10 +1,9 @@
-<nav>
-    <ul>
+<header class="site-header">
+    <a class="brand" href="/">anto.pt<span class="cursor" aria-hidden="true"></span></a>
+    <nav class="site-nav" aria-label="Primary">
         {{ range .Nav }}
-        <li><a href="{{ .URL }}" {{ if eq $.CurrentURL .URL }}class="active"{{ end }}>{{ .Title }}</a></li>
+        <a href="{{ .URL }}" {{ if eq $.CurrentURL .URL }}aria-current="page"{{ end }}>{{ .Title }}</a>
         {{ end }}
-    </ul>
-    <div>
-        {{ template "color-picker.html" .ColorPicker }}
-    </div>
-</nav>
+    </nav>
+    {{ template "color-picker.html" .ColorPicker }}
+</header>

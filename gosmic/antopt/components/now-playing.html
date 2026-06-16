@@ -1,15 +1,32 @@
 {{ define "now-playing" }}
-<a href="https://last.fm/user/zaphodias"><span id="now-playing"></span></a>
+<aside class="now-playing" aria-label="Now playing" hidden>
+    <span class="np-eq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+    <span class="np-label">now playing</span>
+    <a class="np-track" href="https://last.fm/user/zaphodias"></a>
+</aside>
 <script>
-  const evtSource = new EventSource("/now-playing");
-  const txt = document.getElementById("now-playing");
-  evtSource.addEventListener("now-playing", function(event) {
-    if (event.data) {
-      const dataobj = JSON.parse(event.data);
-      txt.innerHTML = `🎶 I'm listening to ${dataobj.Name} - ${dataobj.Artist} right now 🎶`;
-    } else {
-      txt.innerHTML = "";
-    }
-  })
+    (function () {
+        const el = document.querySelector(".now-playing");
+        if (!el) return;
+        const track = el.querySelector(".np-track");
+        const evtSource = new EventSource("/now-playing");
+        evtSource.addEventListener("now-playing", function (event) {
+            let data = null;
+            if (event.data && event.data !== "null") {
+                try { data = JSON.parse(event.data); } catch (e) {}
+            }
+            if (data && data.Name) {
+                track.textContent = "";
+                track.appendChild(document.createTextNode(data.Name + " "));
+                const artist = document.createElement("span");
+                artist.className = "artist";
+                artist.textContent = "— " + data.Artist;
+                track.appendChild(artist);
+                el.hidden = false;
+            } else {
+                el.hidden = true;
+            }
+        });
+    })();
 </script>
 {{ end }}

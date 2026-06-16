@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     {{ template "base-headers" .BaseHeaders }}
-    <title>Antonio Pitasi</title>
+    <title>anto.pt — Antonio Pitasi</title>
     <meta name="description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
     <meta property="og:site_name" content="Antonio Pitasi">
     <meta property="og:url" content="https://anto.pt/">
@@ -20,73 +20,47 @@
   <body>
     <div class="content">
       {{ template "nav.html" .Nav }}
-      <section class="intro">
-        <img src="/static/images/propic.webp" alt="logo" width=288  height=354  loading="lazy">
-        <div class="intro-inner">
-          <div class="title">
-            <h1>
-              Cosmonaut, software engineer, and amateur photographer.
-            </h1>
-          </div>
-          <div class="socials">
-            <a href="https://bsky.app/profile/anto.pt" target="_blank">
-              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Bluesky</title><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg>
-            </a>
-            <a href="https://github.com/Pitasi" target="_blank">
-              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-            </a>
-            <a href="https://linkedin.com/in/pitasi" target="_blank">
-              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            </a>
-            <a href="https://x.com/zaphodias" target="_blank">
-              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
-            </a>
-          </div>
-          <div class="text">
-            <p>
-              I'm Antonio, a software engineer with a passion for
-                        distributed systems and clean maintainable software.
-            </p>
-            <p>
-              Currently software engineer for <a
-                href="https://grafana.com" class="btn-action">Grafana</a> <a
-                href="https://grafana.com/oss/mimir/" class="btn-action">Mimir</a>.
-            </p>
-            <p>
-              Before, I worked on blockchains and distributed systems at
-              <a href="https://tendermint.com" class="link">Tendermint</a>, 
-              <a href="https://web.archive.org/web/20250715183012/https://www.qredo.com/" class="link">Qredo</a>, 
-              and <a href="https://wardenprotocol.org" class="link">Warden Protocol</a>.
-            </p>
-            <p>
-              Before that, I started a meetup group called
-              <a href="https://pisa.dev" class="link">pisa.dev</a>,
-                        and I was among the first engineers for projects such as
-              <a href="https://traent.com" class="link">Traent</a>
-              and
-              <a href="https://zerynth.com" class="link">Zerynth</a>.
-            </p>
-          </div>
+      <main class="wrap">
+        {{ template "now-playing" }}
+
+        <section class="about" aria-label="About">
+          <img class="avatar" src="/static/images/propic.webp" alt="Antonio Pitasi" width="64" height="64">
+          <p class="tagline">Cosmonaut, software engineer, and amateur photographer.</p>
+          <nav class="socials" aria-label="Elsewhere">
+            <a href="https://bsky.app/profile/anto.pt">Bluesky</a>
+            <a href="https://github.com/Pitasi">GitHub</a>
+            <a href="https://linkedin.com/in/pitasi">LinkedIn</a>
+            <a href="https://x.com/zaphodias">X</a>
+          </nav>
+        </section>
+        <div class="about-body">
+          <p>I'm Antonio, a software engineer with a passion for distributed
+          systems and clean maintainable software.</p>
+          <p>Currently software engineer for <a href="https://grafana.com">Grafana</a>
+          <a href="https://grafana.com/oss/mimir/">Mimir</a>.</p>
+          <p>Before, I worked on blockchains and distributed systems at
+          <a href="https://tendermint.com">Tendermint</a>,
+          <a href="https://web.archive.org/web/20250715183012/https://www.qredo.com/">Qredo</a>,
+          and <a href="https://wardenprotocol.org">Warden Protocol</a>.</p>
+          <p>Before that, I started a meetup group called
+          <a href="https://pisa.dev">pisa.dev</a>, and I was among the first
+          engineers for projects such as <a href="https://traent.com">Traent</a>
+          and <a href="https://zerynth.com">Zerynth</a>.</p>
         </div>
-        <div></div>
-      </section>
-      <section class="articles">
-        {{ range $yearIdx, $year := .Articles }}
-        <h1>{{ $year.Year }}</h1>
-        <ul>
-          {{ range $artIdx, $art := $year.Posts }}
+
+        <h2 class="section">~/writing</h2>
+        <ol class="index" reversed>
+          {{ range .Articles }}
           <li>
-            <span class="date">{{ $art.Date }}</span>
-            <a href="{{ $art.URL }}">{{ $art.Title }}</a>
-            {{ if and (eq $yearIdx 0) (eq $artIdx 0) }}
-            <p>{{ $art.Description }}</p>
-            {{ end }}
+            <a class="entry" href="{{ .URL }}">
+              <time datetime="{{ .Date }}">{{ .Date }}</time>
+              <span class="e-title">{{ .Title }}</span>
+            </a>
           </li>
           {{ end }}
-        </ul>
-        {{ end }}
-      </section>
+        </ol>
+      </main>
+      {{ template "footer.html" . }}
     </div>
-    {{ template "footer.html" . }}
   </body>
 </html>

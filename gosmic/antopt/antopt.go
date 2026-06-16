@@ -104,10 +104,12 @@ func (ws *Website) common(r *http.Request) pages.Common {
 
 	return pages.NewCommon(
 		[]components.NavItem{
-			{Title: "Articles", URL: "/"},
-			{Title: "Uses", URL: "/uses"},
-			{Title: "Pics", URL: "https://anto.ph"},
-			{Title: "CV", URL: "/cv"},
+			{Title: "writing", URL: "/"},
+			{Title: "uses", URL: "/uses"},
+			{Title: "pics", URL: "https://anto.ph"},
+			{Title: "cv", URL: "/cv"},
+			{Title: "github", URL: "https://github.com/Pitasi"},
+			{Title: "rss", URL: "/articles/feed.atom"},
 		},
 		currentURL,
 		ws.Colors,

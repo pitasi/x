@@ -115,6 +115,19 @@ func (a Articles) Published() iter.Seq2[int, Article] {
 	}
 }
 
+func (a Articles) Flat() []ArticleLink {
+	var posts []ArticleLink
+	for _, article := range a.Published() {
+		posts = append(posts, ArticleLink{
+			Title:       article.Title,
+			Description: article.Description,
+			Date:        article.Date.Format("2006-01-02"),
+			URL:         "/articles/" + article.Slug,
+		})
+	}
+	return posts
+}
+
 func (a Articles) ByYear() []ArticlesByYear {
 	var lastYear string
 	var postsByYear []ArticlesByYear

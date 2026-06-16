@@ -20,12 +20,12 @@ func main() {
 
 	httpx.RegisterWebsite("anto.pt", &antopt.Website{
 		Colors: []template.CSS{
-			"var(--color-default-bg)",
-			"var(--color-white)",
-			"var(--color-lime-200)",
-			"var(--color-amber-300)",
-			"var(--color-blue-200)",
-			"var(--color-orange-400)",
+			"#dde6f0", // light-blue terminal (default)
+			"#efe9df", // warm paper
+			"#f1ead0", // legal-pad yellow
+			"#dfeee4", // soft mint
+			"#f1e3e8", // faint rose
+			"#f5f6f8", // near white
 		},
 	}, mux)
 	httpx.RegisterWebsite("anto.ph", antoph.Website{}, mux)

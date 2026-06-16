@@ -2,116 +2,119 @@
 <html lang="en">
   <head>
     {{ template "base-headers" .BaseHeaders }}
-    <title>Colophon - Antonio Pitasi</title>
-    <meta name="description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <title>Colophon — anto.pt</title>
+    <meta name="description" content="The story and tech behind anto.pt.">
     <meta property="og:site_name" content="Antonio Pitasi">
-    <meta property="og:url" content="https://anto.pt/">
-    <meta property="og:title" content="Antonio Pitasi">
-    <meta property="og:description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <meta property="og:url" content="https://anto.pt/colophon">
+    <meta property="og:title" content="Colophon — Antonio Pitasi">
+    <meta property="og:description" content="The story and tech behind anto.pt.">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://anto.pt/socialimg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anto.pt/socialimg">
     <meta name="twitter:site" content="@zaphodias">
     <meta name="twitter:creator" content="@zaphodias">
-    <meta name="twitter:title" content="Antonio Pitasi">
-    <meta name="twitter:description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <meta name="twitter:title" content="Colophon — Antonio Pitasi">
+    <meta name="twitter:description" content="The story and tech behind anto.pt.">
   </head>
   <body>
     <div class="content">
       {{ template "nav.html" .Nav }}
-      <article>
-        <h1>Colophon of anto.pt</h1>
-        <p>
-          <code>anto.pt</code>
-          is the website of me, Antonio.
-        </p>
-        <p>
-          I don't live in Portugal and I'm not Portuguese. I chose this domain because it looked like an abbreviation of my full name.
-        </p>
-        <p>
-          This website has changed a lot over time. I started having a personal
-      website back when I was a teenager, on a different domain. I bought this
-      domain in 2017 and self-hosted an instance of
-          <a href="https://ghost.org">Ghost</a>, at the time I thought it was the easiest way to start writing something without getting lost in technical and hosting details.
-        </p>
-        <p>
-          At the beginning, it was hosted on a Raspberry Pi B+ that I had at home.
-      But I wanted to try something more production-ready, not because I
-      started having visitors, but just for the sake of my own learning. I was
-      still studying at university back then.
-        </p>
-        <p>
-          A rough timeline of the different tech stacks I tried:
-        </p>
-        <ul>
-          <li>2016 - Ghost (self-hosted)</li>
-          <li>2018 - Hugo (self-hosted, SSR)</li>
-          <li>2022 - HashNode (managed, didn't last long)</li>
-          <li>2022 - Next.js and TailwindUI (bought and used
-            <a href="https://spotlight.tailwindui.com/">Spotlight theme</a>)</li>
-          <li>2022 - Astro (ported Spotlight to be a static site layout)</li>
-          <li>2023 -
-            <a href="https://github.com/pitasi/univrs">univrs</a>, my Rust website server built while iterating on
-            <a href="https://anto.pt/articles/rust-server-components">Rust Server Components</a></li>
-          <li>2024 -
-            <a href="https://github.com/pitasi/x/tree/main/gosmic">gosmic</a>, my no-frills no-dependencies Go website server
-        (current)</li>
-        </ul>
-        <p>
-          While writing this page, I wanted to make a point about how the easier
-      the tech stack, the more your content is going to last.
-      It turns out, when checking with the Wayback Machine, that the Next.js
-      version is the one that rendered the content without any style,
-      while the SSR-generated pages were rendered as if the site was
-      still up and running.
-        </p>
-        <h2>Design</h2>
-        <p>
-          Like the tech stack, the simplest design is the one that is going to
-      last the longest. However, this doesn't play well with my tendency to
-      keep changing things, experimenting, and having colorful elements.
-        </p>
-        <p>Here's a few screenshots from the past:</p>
-        <figure>
-          <img src="/static/images/colophon/spotlight.webp" alt="Spotlight, the theme made by TailwindUI that I used with Next.js and later Astro.">
-          <figcaption>Spotlight, the theme made by TailwindUI that I used with Next.js and later Astro.</figcaption>
-        </figure>
-        <br>
-        <figure>
-          <img src="/static/images/colophon/univrs.webp" alt="Neo-brutalist I made myself for univrs. Flashy colors yet a clear navigation between sections.">
-          <figcaption>Neo-brutalist I made myself for univrs. Flashy colors yet a clear navigation between sections.</figcaption>
-        </figure>
-        <br>
-        <figure>
-          <img src="/static/images/colophon/univrs2.webp" alt="A example of an article page of univrs.">
-          <figcaption>A example of an article page of univrs.</figcaption>
-        </figure>
-        <br>
-        <figure>
-          <img src="/static/images/colophon/gosmic.webp" alt="Another theme I made that didn't last long, inspired by retrocomputing.">
-          <figcaption>Another theme I made that didn't last long, inspired by retrocomputing.</figcaption>
-        </figure>
-        <br>
-        <figure>
-          <img src="/static/images/colophon/gosmic2.webp" alt="The current gosmic theme. Clean and minimal, yet colorful.">
-          <figcaption>The current gosmic theme. Clean and minimal, yet colorful.</figcaption>
-        </figure>
-        <h2>Analytics</h2>
-        <p>
-          I'm using a self-hosted instance of
-          <a href="">Plausible</a>
-          to track what pages are the most viewed. I usually don't write for other
-      people, still I'm a bit curious to see if anything gets more traction.
-        </p>
-        <h2>Hosting</h2>
-        <p>
-          I have a single VPS where I keep most of my side projects, nothing big anyway, hosted at
-          <a href="https://hosthatch.com">HostHatch</a>.
-        </p>
-      </article>
-      {{ template "intro.html" }}
+      <main class="wrap">
+        {{ template "now-playing" }}
+
+        <a class="backlink" href="/">← ~/writing</a>
+
+        <article>
+          <header class="post-head">
+            <h1 class="post-title">Colophon of anto.pt</h1>
+          </header>
+
+          <div class="prose">
+            <p><code>anto.pt</code> is the website of me, Antonio.</p>
+            <p>
+              I don't live in Portugal and I'm not Portuguese. I chose this domain because it looked like an abbreviation of my full name.
+            </p>
+            <p>
+              This website has changed a lot over time. I started having a personal
+              website back when I was a teenager, on a different domain. I bought this
+              domain in 2017 and self-hosted an instance of
+              <a href="https://ghost.org">Ghost</a>, at the time I thought it was the easiest way to start writing something without getting lost in technical and hosting details.
+            </p>
+            <p>
+              At the beginning, it was hosted on a Raspberry Pi B+ that I had at home.
+              But I wanted to try something more production-ready, not because I
+              started having visitors, but just for the sake of my own learning. I was
+              still studying at university back then.
+            </p>
+            <p>A rough timeline of the different tech stacks I tried:</p>
+            <ul>
+              <li>2016 - Ghost (self-hosted)</li>
+              <li>2018 - Hugo (self-hosted, SSR)</li>
+              <li>2022 - HashNode (managed, didn't last long)</li>
+              <li>2022 - Next.js and TailwindUI (bought and used
+                <a href="https://spotlight.tailwindui.com/">Spotlight theme</a>)</li>
+              <li>2022 - Astro (ported Spotlight to be a static site layout)</li>
+              <li>2023 -
+                <a href="https://github.com/pitasi/univrs">univrs</a>, my Rust website server built while iterating on
+                <a href="https://anto.pt/articles/rust-server-components">Rust Server Components</a></li>
+              <li>2024 -
+                <a href="https://github.com/pitasi/x/tree/main/gosmic">gosmic</a>, my no-frills no-dependencies Go website server
+                (current)</li>
+            </ul>
+            <p>
+              While writing this page, I wanted to make a point about how the easier
+              the tech stack, the more your content is going to last.
+              It turns out, when checking with the Wayback Machine, that the Next.js
+              version is the one that rendered the content without any style,
+              while the SSR-generated pages were rendered as if the site was
+              still up and running.
+            </p>
+            <h2>Design</h2>
+            <p>
+              Like the tech stack, the simplest design is the one that is going to
+              last the longest. However, this doesn't play well with my tendency to
+              keep changing things, experimenting, and having colorful elements.
+            </p>
+            <p>Here's a few screenshots from the past:</p>
+            <figure>
+              <img src="/static/images/colophon/spotlight.webp" alt="Spotlight, the theme made by TailwindUI that I used with Next.js and later Astro." loading="lazy">
+              <figcaption>Spotlight, the theme made by TailwindUI that I used with Next.js and later Astro.</figcaption>
+            </figure>
+            <figure>
+              <img src="/static/images/colophon/univrs.webp" alt="Neo-brutalist I made myself for univrs. Flashy colors yet a clear navigation between sections." loading="lazy">
+              <figcaption>Neo-brutalist I made myself for univrs. Flashy colors yet a clear navigation between sections.</figcaption>
+            </figure>
+            <figure>
+              <img src="/static/images/colophon/univrs2.webp" alt="A example of an article page of univrs." loading="lazy">
+              <figcaption>A example of an article page of univrs.</figcaption>
+            </figure>
+            <figure>
+              <img src="/static/images/colophon/gosmic.webp" alt="Another theme I made that didn't last long, inspired by retrocomputing." loading="lazy">
+              <figcaption>Another theme I made that didn't last long, inspired by retrocomputing.</figcaption>
+            </figure>
+            <figure>
+              <img src="/static/images/colophon/gosmic2.webp" alt="The current gosmic theme. Clean and minimal, yet colorful." loading="lazy">
+              <figcaption>The current gosmic theme. Clean and minimal, yet colorful.</figcaption>
+            </figure>
+            <h2>Analytics</h2>
+            <p>
+              I'm using a self-hosted instance of
+              <a href="">Plausible</a>
+              to track what pages are the most viewed. I usually don't write for other
+              people, still I'm a bit curious to see if anything gets more traction.
+            </p>
+            <h2>Hosting</h2>
+            <p>
+              I have a single VPS where I keep most of my side projects, nothing big anyway, hosted at
+              <a href="https://hosthatch.com">HostHatch</a>.
+            </p>
+          </div>
+        </article>
+
+        {{ template "intro.html" }}
+      </main>
+      {{ template "footer.html" . }}
     </div>
-    {{ template "footer.html" }}
   </body>
 </html>

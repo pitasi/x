@@ -7,12 +7,12 @@ import (
 	"anto.pt/x/gosmic/templates"
 )
 
-func RenderIndex(t *templates.T, w http.ResponseWriter, common Common, a []articles.ArticlesByYear) {
+func RenderIndex(t *templates.T, w http.ResponseWriter, common Common, a []articles.ArticleLink) {
 	type templateData struct {
 		Common
 
 		CurrentURL string
-		Articles   []articles.ArticlesByYear
+		Articles   []articles.ArticleLink
 	}
 
 	tmplData := templateData{

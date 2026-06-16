@@ -2,37 +2,45 @@
 <html lang="en">
   <head>
     {{ template "base-headers" .BaseHeaders }}
-    <title>Uses - Antonio Pitasi</title>
-    <meta name="description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <title>Uses — anto.pt</title>
+    <meta name="description" content="The apps, tools and hardware Antonio Pitasi uses more or less daily.">
     <meta property="og:site_name" content="Antonio Pitasi">
-    <meta property="og:url" content="https://anto.pt/">
-    <meta property="og:title" content="Antonio Pitasi">
-    <meta property="og:description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <meta property="og:url" content="https://anto.pt/uses">
+    <meta property="og:title" content="Uses — Antonio Pitasi">
+    <meta property="og:description" content="The apps, tools and hardware Antonio Pitasi uses more or less daily.">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://anto.pt/socialimg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anto.pt/socialimg">
     <meta name="twitter:site" content="@zaphodias">
     <meta name="twitter:creator" content="@zaphodias">
-    <meta name="twitter:title" content="Antonio Pitasi">
-    <meta name="twitter:description" content="Antonio Pitasi: Cosmonaut, software engineer, and amateur photographer. Read articles, learn about my projects, and connect.">
+    <meta name="twitter:title" content="Uses — Antonio Pitasi">
+    <meta name="twitter:description" content="The apps, tools and hardware Antonio Pitasi uses more or less daily.">
   </head>
   <body>
     <div class="content">
       {{ template "nav.html" .Nav }}
-      <div class="uses">
-        <ul>
-          {{ range .Uses.List }}
-          <li>
-            <a href="/uses/{{ .Slug }}">
-              <img src="{{ .Icon }}" loading=lazy>
-              {{ .Title }}
-            </a>
-          </li>
-          {{ end }}
-        </ul>
-      </div>
+      <main class="wrap">
+        {{ template "now-playing" }}
+
+        <section class="intro">
+          <p><strong>What I use.</strong> The short list of software and hardware I
+          actually open every day. Updated when something earns its place — not a
+          wishlist.</p>
+          <p class="muted">Tap any item for the why.</p>
+        </section>
+
+        <div class="uses-group">
+          <ul class="uses-list">
+            {{ range .Uses.List }}
+            <li><a class="use-row" href="/uses/{{ .Slug }}">
+              <span class="u-name">{{ .Title }}</span>
+            </a></li>
+            {{ end }}
+          </ul>
+        </div>
+      </main>
+      {{ template "footer.html" . }}
     </div>
-    {{ template "footer.html" }}
   </body>
 </html>

@@ -12,10 +12,10 @@ import (
 
 func (ws *Website) articles(t *templates.T, mux *http.ServeMux) {
 	a := articles.Load()
-	articlesByYear := a.ByYear()
+	articlesList := a.Flat()
 
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-		pages.RenderIndex(t, w, ws.common(r), articlesByYear)
+		pages.RenderIndex(t, w, ws.common(r), articlesList)
 	})
 
 	propic, err := s.Open("static/images/propic_nobg.png")
