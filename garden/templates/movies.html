@@ -20,6 +20,10 @@
     <input type="search" data-search placeholder="search titles…" aria-label="search movies" autocomplete="off" />
   </div>
   <span class="count-pill" data-count data-noun="titles"></span>
+  <label class="filter-toggle">
+    <input type="checkbox" data-unrated-filter />
+    <span>to-do only</span>
+  </label>
   <span class="sortctl">
     <label for="sortsel">sort</label>
     <select id="sortsel" data-sort-select>
@@ -47,7 +51,7 @@
     </thead>
     <tbody>
       {{ range .Movies }}
-      <tr>
+      <tr{{ if not .Rating }} data-unrated{{ end }}>
         <td class="title" data-sort="{{ sortKey .Title }}">{{ .Title }}</td>
         <td class="num" data-label="my rating" data-sort="{{ if .Rating }}{{ .Rating }}{{ end }}">
           {{ if .Rating }}

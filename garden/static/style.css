@@ -265,6 +265,29 @@ a:visited:hover { color: var(--link-visited); }
 }
 .count-pill b { color: var(--ink); font-weight: 600; }
 
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  padding: 6px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+}
+.filter-toggle:hover { border-color: var(--link); color: var(--ink); }
+.filter-toggle input { accent-color: var(--link); margin: 0; cursor: pointer; }
+.filter-toggle:has(input:checked) {
+  border-color: var(--link);
+  color: var(--ink);
+  background: var(--link-bg);
+}
+
 .sortctl { display: none; align-items: center; gap: 6px; font-size: 13px; }
 .sortctl label { color: var(--faint); }
 .sortctl select {

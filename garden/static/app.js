@@ -15,6 +15,7 @@
   var countNoun = (countEl && countEl.getAttribute('data-noun')) || 'titles';
   var totalCount = rows.length;
   var sortSelect = document.querySelector('[data-sort-select]');
+  var unratedToggle = document.querySelector('[data-unrated-filter]');
 
   var headers = table.tHead.rows[0].cells;
   var initialKey = 'title';
@@ -28,7 +29,9 @@
     }
   }
 
-  var state = { q: '', key: initialKey, dir: initialDir };
+  var state = { q: '', key: initialKey, dir: initialDir, unrated: false };
+
+  rows.forEach(function (tr) { tr._unrated = tr.hasAttribute('data-unrated'); });
 
   rows.forEach(function (tr) {
     for (var i = 0; i < tr.cells.length; i++) {
@@ -69,6 +72,7 @@
   function render() {
     var q = state.q;
     var visible = rows.filter(function (tr) {
+      if (state.unrated && !tr._unrated) return false;
       return !q || tr._q.indexOf(q) !== -1;
     });
     visible.sort(compare);
@@ -82,7 +86,7 @@
     var shown = visible.length;
 
     if (countEl) {
-      if (q) countEl.innerHTML = '<b>' + shown + '</b> of ' + totalCount;
+      if (q || state.unrated) countEl.innerHTML = '<b>' + shown + '</b> of ' + totalCount;
       else countEl.innerHTML = '<b>' + totalCount + '</b> ' + countNoun;
     }
 
@@ -124,6 +128,13 @@
   if (searchInput) {
     searchInput.addEventListener('input', function () {
       state.q = searchInput.value.trim().toLowerCase();
+      render();
+    });
+  }
+
+  if (unratedToggle) {
+    unratedToggle.addEventListener('change', function () {
+      state.unrated = unratedToggle.checked;
       render();
     });
   }

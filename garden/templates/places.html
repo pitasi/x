@@ -20,6 +20,10 @@
     <input type="search" data-search placeholder="search places…" aria-label="search places" autocomplete="off" />
   </div>
   <span class="count-pill" data-count data-noun="places"></span>
+  <label class="filter-toggle">
+    <input type="checkbox" data-unrated-filter />
+    <span>want only</span>
+  </label>
   <span class="sortctl">
     <label for="sortsel">sort</label>
     <select id="sortsel" data-sort-select>
@@ -47,7 +51,7 @@
     </thead>
     <tbody>
       {{ range .Places }}
-      <tr>
+      <tr{{ if not .Rating }} data-unrated{{ end }}>
         <td class="title" data-sort="{{ sortKey .Title }}" data-extra="{{ range .Loc }}{{ . | prettyLink }} {{ end }}">
           {{ .Title }}
           {{ if .Loc }}
