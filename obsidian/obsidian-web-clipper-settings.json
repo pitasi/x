@@ -369,7 +369,7 @@
       {
         "id": "1734955521717xiipwwi",
         "name": "coordinates",
-        "value": "{{url|split:\\\"/@\\\"|slice:1|split:\\\",\\\"|slice:0,2|join}}",
+        "value": "{{url|split:\\\"!3d\\\"|slice:1|split:\\\"!\\\"|slice:0,1}},{{url|split:\\\"!4d\\\"|slice:1|split:\\\"!\\\"|slice:0,1}}",
         "type": "multitext"
       },
       {
@@ -483,105 +483,6 @@
       "https://www.youtube.com/watch?v="
     ],
     "id": "1734955577525zn98p5c",
-    "context": ""
-  },
-  "template_1734955607415wncflde": {
-    "schemaVersion": "0.1.0",
-    "name": "IMDB reference",
-    "behavior": "create",
-    "noteNameFormat": "{{meta:name:title|split:\" - IMDb\"|slice:0,1}}",
-    "path": "References",
-    "noteContentFormat": "",
-    "properties": [
-      {
-        "id": "1734955607419qq9hnr1",
-        "name": "categories",
-        "value": "[[Movies]]",
-        "type": "multitext"
-      },
-      {
-        "id": "1734955607419d7nuhy1",
-        "name": "genre",
-        "value": "{{selector:.titlereference-header .ipl-inline-list__item a[href*='genre']|wikilink}}",
-        "type": "multitext"
-      },
-      {
-        "id": "17349556074199f1cb0y",
-        "name": "imdbId",
-        "value": "",
-        "type": "text"
-      },
-      {
-        "id": "1734955607419hedrh9f",
-        "name": "cover",
-        "value": "{{selector:.titlereference-primary-image:src}}",
-        "type": "text"
-      },
-      {
-        "id": "1734955607419h5rt2g7",
-        "name": "director",
-        "value": "",
-        "type": "multitext"
-      },
-      {
-        "id": "173495560741956gu6zy",
-        "name": "cast",
-        "value": "",
-        "type": "multitext"
-      },
-      {
-        "id": "17349556074198b1u7le",
-        "name": "length",
-        "value": "",
-        "type": "text"
-      },
-      {
-        "id": "1734955607419txn5s3l",
-        "name": "year",
-        "value": "{{selector:h3 .titlereference-title-year}}",
-        "type": "number"
-      },
-      {
-        "id": "173495560741968x8q9r",
-        "name": "rating",
-        "value": "",
-        "type": "number"
-      },
-      {
-        "id": "17349556074196juhpm6",
-        "name": "scoreImdb",
-        "value": "{{selector:.ipl-rating-widget > .ipl-rating-star > .ipl-rating-star__rating}}",
-        "type": "number"
-      },
-      {
-        "id": "1734955607419x10ezrd",
-        "name": "last",
-        "value": "",
-        "type": "date"
-      },
-      {
-        "id": "17349556074196rruis3",
-        "name": "created",
-        "value": "{{date}}",
-        "type": "date"
-      },
-      {
-        "id": "17349556074193p37hnw",
-        "name": "tags",
-        "value": "movies, to-watch",
-        "type": "multitext"
-      },
-      {
-        "id": "17350628451366gk35vg8e",
-        "name": "source",
-        "value": "{{url}}",
-        "type": "text"
-      }
-    ],
-    "triggers": [
-      "/^https:\\/\\/www\\.imdb\\.com\\/title\\/tt\\d+\\/reference\\/?$/"
-    ],
-    "id": "1734955607415wncflde",
     "context": ""
   },
   "template_1734955674199iuel27k": {
@@ -776,6 +677,12 @@
         "id": "1735062839590jv6ti0xe9",
         "name": "source",
         "value": "{{url}}",
+        "type": "text"
+      },
+      {
+        "id": "1734978132478imdb01",
+        "name": "imdbId",
+        "value": "{{url|split:\\\"/title/\\\"|slice:1|split:\\\"/\\\"|slice:0,1}}",
         "type": "text"
       }
     ],
@@ -1062,7 +969,7 @@
       {
         "id": "17607883890092q2gnvh",
         "name": "rating",
-        "value": "{{selector:[data-testid=\\\"hero-rating-bar__user-rating__score\\\"] span|unique}}",
+        "value": "",
         "type": "number"
       },
       {
@@ -1106,10 +1013,22 @@
         "name": "tags",
         "value": "movies, to-watch",
         "type": "multitext"
+      },
+      {
+        "id": "1760788389009src0001",
+        "name": "source",
+        "value": "{{url}}",
+        "type": "text"
+      },
+      {
+        "id": "1760788389009imdb001",
+        "name": "imdbId",
+        "value": "{{url|split:\\\"/title/\\\"|slice:1|split:\\\"/\\\"|slice:0,1}}",
+        "type": "text"
       }
     ],
     "triggers": [
-      "/^https:\\/\\/www\\.imdb\\.com\\/title\\/tt\\d+(?!\\/reference\\/)(\\/[^\\s]*)?$/"
+      "schema:@Movie"
     ],
     "id": "1760788389006rot66y7",
     "context": ""
@@ -1329,7 +1248,6 @@
     "1734978132478wi422wgb1",
     "17349556963891t2jag4",
     "1734955674199iuel27k",
-    "1734955607415wncflde",
     "1760788389006rot66y7",
     "1734955577525zn98p5c",
     "17349555217119tqy2jv",
