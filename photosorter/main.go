@@ -154,12 +154,12 @@ func process(photodb, path string) {
 
 	image, err := vips.NewImageFromBuffer(content)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %w", path, err))
 	}
 
 	h := sha256.New()
 	if _, err := h.Write(content); err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %w", path, err))
 	}
 	hash := h.Sum(nil)
 
@@ -286,23 +286,22 @@ func organizeFolder(dir string, m map[string]string) error {
 }
 
 func main() {
-	rawsPath := os.Args[1]
-	privatePath := os.Args[2]
-	inputPath := os.Args[3]
-	photodbPath := os.Args[4]
+	// rawsPath := os.Args[1]
+	inputPath := os.Args[1]
+	photodbPath := os.Args[2]
 
-	folderMap, err := buildFolderMap(rawsPath)
-	if err != nil {
-		panic(err)
-	}
+	// folderMap, err := buildFolderMap(rawsPath)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	if err := organizeFolder(privatePath, folderMap); err != nil {
-		panic(err)
-	}
-
-	if err := organizeFolder(inputPath, folderMap); err != nil {
-		panic(err)
-	}
+	// if err := organizeFolder(privatePath, folderMap); err != nil {
+	// 	panic(err)
+	// }
+	//
+	// if err := organizeFolder(inputPath, folderMap); err != nil {
+	// 	panic(err)
+	// }
 
 	if err := os.MkdirAll(photodbPath, 0766); err != nil {
 		panic(err)
@@ -333,11 +332,27 @@ func main() {
 			return nil
 		}
 
+		if strings.HasPrefix(filepath.Base(path), ".") {
+			return nil
+		}
+
 		if !strings.HasSuffix(path, ".jpg") {
 			return nil
 		}
 
 		if strings.HasSuffix(path, "_ig.jpg") {
+			return nil
+		}
+
+		if !strings.Contains(path, "Processed") {
+			return nil
+		}
+
+		if strings.Contains(path, "Instagram") {
+			return nil
+		}
+
+		if strings.Contains(path, "Private") {
 			return nil
 		}
 
@@ -352,6 +367,7 @@ func main() {
 
 	wg.Wait()
 
+	// cleanup any extra files in photodb
 	outputFS := os.DirFS(photodbPath)
 	if err := fs.WalkDir(outputFS, ".", func(path string, d fs.DirEntry, err error) error {
 		if path == "." || !d.IsDir() {
