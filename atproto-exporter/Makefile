@@ -5,7 +5,7 @@ PKG := ./...
 ZSTD_DICT_PATH := internal/jetstream/zstd_dict.bin
 ZSTD_DICT_URL := https://raw.githubusercontent.com/bluesky-social/jetstream/main/internal/subscribe/zstd_dictionary
 
-.PHONY: build test race vet fmt lint run docker compose update-zstd-dict tidy
+.PHONY: build test race vet fmt lint run docker compose compose-cloud update-zstd-dict tidy
 
 build:
 	go build -o $(BINARY) ./cmd/atproto-exporter
@@ -33,6 +33,11 @@ docker:
 
 compose:
 	docker compose -f deploy/docker-compose.yml up --build
+
+# VPS stack: exporter + Grafana Alloy remote_write to Grafana Cloud.
+# Needs deploy/cloud/.env (copy from deploy/cloud/.env.example first).
+compose-cloud:
+	docker compose -f deploy/cloud/docker-compose.yml up -d --build
 
 tidy:
 	go mod tidy

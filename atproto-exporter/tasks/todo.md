@@ -44,6 +44,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 - [x] **T11** Dockerfile + docker-compose (exporter + Prometheus + Grafana) + provisioning
 - [x] **T12** Grafana dashboard JSON (all panels + `$datasource` variable)
 - [x] **T13** README + ADR 0001/0002 + Makefile (`update-zstd-dict`)
+- [x] **T14** Grafana Cloud VPS stack (`deploy/cloud`: exporter + Alloy remote_write) *(post-plan request)*
 
 ### ✅ Checkpoint E (Complete)
 - [ ] `docker compose up` → all three services; Grafana dashboard live, no manual import

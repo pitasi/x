@@ -55,6 +55,22 @@ docker compose up --build
 The exporter is an ordinary scrape target, so you can also point your own
 Prometheus/Mimir at `:9200` and import `deploy/grafana/dashboards/atproto.json`.
 
+### Ship to Grafana Cloud (VPS)
+
+To run on a server and push metrics to a Grafana Cloud account — no local
+Prometheus or Grafana — use the `deploy/cloud` stack. It pairs the exporter with
+a [Grafana Alloy](https://grafana.com/docs/alloy/) collector that scrapes it and
+`remote_write`s to your Cloud Prometheus:
+
+```sh
+cd deploy/cloud
+cp .env.example .env   # fill in your Grafana Cloud URL, user, and token
+docker compose up -d --build
+```
+
+Credentials stay in the gitignored `.env` (Alloy reads them via `sys.env`).
+See [`deploy/cloud/README.md`](deploy/cloud/README.md) for details.
+
 ## Metrics contract
 
 Counters reset on restart — **every dashboard panel uses `rate()`/`increase()`**;

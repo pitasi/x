@@ -1,0 +1,40 @@
+# VPS deployment: run the exporter and ship its metrics to Grafana Cloud via
+# Grafana Alloy. No local Prometheus or Grafana — visualization lives in your
+# Grafana Cloud stack (import deploy/grafana/dashboards/atproto.json there).
+#
+#   cp .env.example .env    # then fill in your Grafana Cloud credentials
+#   docker compose up -d --build
+services:
+  exporter:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    volumes:
+      - exporter-data:/data
+    restart: unless-stopped
+    # No published ports: only Alloy, on the same compose network, scrapes it.
+    expose:
+      - "9200"
+
+  alloy:
+    image: grafana/alloy:latest
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --storage.path=/var/lib/alloy/data
+      - --server.http.listen-addr=0.0.0.0:12345
+    env_file:
+      - .env
+    volumes:
+      - ./config.alloy:/etc/alloy/config.alloy:ro
+      - alloy-data:/var/lib/alloy/data
+    depends_on:
+      - exporter
+    restart: unless-stopped
+    # Alloy's own UI, bound to localhost only, for checking remote_write health.
+    ports:
+      - "127.0.0.1:12345:12345"
+
+volumes:
+  exporter-data:
+  alloy-data:

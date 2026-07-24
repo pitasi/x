@@ -1,0 +1,24 @@
+// Grafana Alloy: scrape the atproto-exporter and remote_write everything to
+// Grafana Cloud. Credentials are read from the environment (see .env.example),
+// so no secret ever lands in this file or in git.
+
+prometheus.scrape "atproto_exporter" {
+	// The exporter is reachable by service name on the compose network.
+	targets = [
+		{ __address__ = "exporter:9200" },
+	]
+	job_name        = "atproto-exporter"
+	scrape_interval = "15s"
+	forward_to      = [prometheus.remote_write.grafana_cloud.receiver]
+}
+
+prometheus.remote_write "grafana_cloud" {
+	endpoint {
+		url = sys.env("GC_PROM_URL")
+
+		basic_auth {
+			username = sys.env("GC_PROM_USER")
+			password = sys.env("GC_PROM_TOKEN")
+		}
+	}
+}
