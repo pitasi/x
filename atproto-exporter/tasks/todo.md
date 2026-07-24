@@ -43,7 +43,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 ## Phase 5: Deploy & docs
 - [x] **T11** Dockerfile + docker-compose (exporter + Prometheus + Grafana) + provisioning
 - [x] **T12** Grafana dashboard JSON (all panels + `$datasource` variable)
-- [ ] **T13** README + ADR 0001/0002 + Makefile (`update-zstd-dict`)
+- [x] **T13** README + ADR 0001/0002 + Makefile (`update-zstd-dict`)
 
 ### ✅ Checkpoint E (Complete)
 - [ ] `docker compose up` → all three services; Grafana dashboard live, no manual import
