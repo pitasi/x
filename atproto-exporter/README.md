@@ -72,6 +72,7 @@ never read a counter as a cumulative-since-genesis value.
 | `atproto_top_hashtags` | gauge | `hashtag` | same mechanism |
 | `atproto_exporter_ws_connected` | gauge | — | 0/1 |
 | `atproto_exporter_ws_reconnects_total` | counter | — | |
+| `atproto_exporter_ws_bytes_received_total` | counter | `stage` | `wire` = on-the-wire (bandwidth), `decoded` = post-zstd |
 | `atproto_exporter_plc_poll_errors_total` | counter | — | |
 | `atproto_exporter_plc_poll_duration_seconds` | histogram | — | |
 

@@ -170,14 +170,17 @@ func (c *Consumer) readLoop(ctx context.Context, conn wsConn) error {
 		if err != nil {
 			return err
 		}
+		wire := len(data)
 		if c.dec != nil {
 			decoded, derr := c.dec.DecodeAll(data, nil)
 			if derr != nil {
+				c.m.AddWSBytes(wire, 0)
 				c.logger.Warn("jetstream zstd decode failed", "err", derr)
 				continue
 			}
 			data = decoded
 		}
+		c.m.AddWSBytes(wire, len(data))
 		if err := c.pipeline.Process(data); err != nil {
 			c.logger.Debug("jetstream message decode failed", "err", err)
 			continue

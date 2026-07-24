@@ -82,6 +82,37 @@ func TestConsumerProcessesThenReconnects(t *testing.T) {
 	}
 }
 
+func TestConsumerCountsBytes(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	m1, m2 := likeMsg(1), likeMsg(2)
+	var dials int
+	cfg := Config{
+		Hosts: []string{"h1"},
+		Dial: func(context.Context, string) (wsConn, error) {
+			dials++
+			if dials == 1 {
+				return &fakeConn{msgs: [][]byte{m1, m2}, onExhaust: io.EOF}, nil
+			}
+			cancel()
+			return nil, context.Canceled
+		},
+		Sleep: func(ctx context.Context, _ time.Duration) error { return ctx.Err() },
+	}
+	c, m, _ := newConsumerHarness(t, cfg)
+	_ = c.Run(ctx)
+
+	wantWire := float64(len(m1) + len(m2))
+	if got := testutil.ToFloat64(m.WSBytesReceivedVec().WithLabelValues("wire")); got != wantWire {
+		t.Errorf("wire bytes = %v, want %v", got, wantWire)
+	}
+	// No zstd: decoded == wire.
+	if got := testutil.ToFloat64(m.WSBytesReceivedVec().WithLabelValues("decoded")); got != wantWire {
+		t.Errorf("decoded bytes = %v, want %v", got, wantWire)
+	}
+}
+
 func TestConsumerRotatesHosts(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -144,6 +175,13 @@ func TestConsumerZstdDecode(t *testing.T) {
 
 	if got := testutil.ToFloat64(m.EventsTotalVec().WithLabelValues("commit", "app.bsky.feed.like", "create")); got != 1 {
 		t.Errorf("zstd-decoded like = %v, want 1", got)
+	}
+	// Wire bytes are the compressed size; decoded bytes are the original JSON.
+	if got := testutil.ToFloat64(m.WSBytesReceivedVec().WithLabelValues("wire")); got != float64(len(compressed)) {
+		t.Errorf("wire bytes = %v, want %v (compressed)", got, len(compressed))
+	}
+	if got := testutil.ToFloat64(m.WSBytesReceivedVec().WithLabelValues("decoded")); got != float64(len(likeMsg(7))) {
+		t.Errorf("decoded bytes = %v, want %v (original)", got, len(likeMsg(7)))
 	}
 }
 

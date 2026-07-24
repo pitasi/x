@@ -32,6 +32,7 @@ type Metrics struct {
 
 	wsConnected     prometheus.Gauge
 	wsReconnects    prometheus.Counter
+	wsBytesReceived *prometheus.CounterVec
 	plcPollErrors   prometheus.Counter
 	plcPollDuration prometheus.Histogram
 }
@@ -79,6 +80,10 @@ func New(reg prometheus.Registerer) *Metrics {
 			Name: "atproto_exporter_ws_reconnects_total",
 			Help: "Total Jetstream WebSocket reconnect attempts.",
 		}),
+		wsBytesReceived: prometheus.NewCounterVec(prometheus.CounterOpts{
+			Name: "atproto_exporter_ws_bytes_received_total",
+			Help: "Total Jetstream bytes received, by stage: wire (on the wire, i.e. bandwidth) and decoded (after zstd decompression).",
+		}, []string{"stage"}),
 		plcPollErrors: prometheus.NewCounter(prometheus.CounterOpts{
 			Name: "atproto_exporter_plc_poll_errors_total",
 			Help: "Total plc.directory poll errors.",
@@ -95,7 +100,7 @@ func New(reg prometheus.Registerer) *Metrics {
 	reg.MustRegister(
 		m.eventsTotal, m.postsTotal, m.firehoseLag, m.eventsProcessed,
 		m.plcOperations, m.federationPDS, m.topDomains, m.topHashtags,
-		m.wsConnected, m.wsReconnects, m.plcPollErrors, m.plcPollDuration,
+		m.wsConnected, m.wsReconnects, m.wsBytesReceived, m.plcPollErrors, m.plcPollDuration,
 	)
 	return m
 }
@@ -127,6 +132,14 @@ func (m *Metrics) SetWSConnected(up bool) {
 
 // IncWSReconnects increments the reconnect counter.
 func (m *Metrics) IncWSReconnects() { m.wsReconnects.Inc() }
+
+// AddWSBytes records bytes received from Jetstream: wire is the on-the-wire
+// (post-compression) size that determines bandwidth; decoded is the size after
+// zstd decompression (equal to wire when compression is disabled).
+func (m *Metrics) AddWSBytes(wire, decoded int) {
+	m.wsBytesReceived.WithLabelValues("wire").Add(float64(wire))
+	m.wsBytesReceived.WithLabelValues("decoded").Add(float64(decoded))
+}
 
 // --- PLC façade ---
 
@@ -171,6 +184,9 @@ func (m *Metrics) WSConnectedCollector() prometheus.Collector { return m.wsConne
 
 // WSReconnectsCollector returns the ws-reconnects counter.
 func (m *Metrics) WSReconnectsCollector() prometheus.Collector { return m.wsReconnects }
+
+// WSBytesReceivedVec returns the ws-bytes-received counter vector.
+func (m *Metrics) WSBytesReceivedVec() *prometheus.CounterVec { return m.wsBytesReceived }
 
 // PLCPollErrorsCollector returns the PLC poll-errors counter.
 func (m *Metrics) PLCPollErrorsCollector() prometheus.Collector { return m.plcPollErrors }
