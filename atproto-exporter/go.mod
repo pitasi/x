@@ -2,7 +2,11 @@ module anto.pt/x/atproto-exporter
 
 go 1.26.5
 
-require github.com/prometheus/client_golang v1.24.1
+require (
+	github.com/coder/websocket v1.8.15
+	github.com/klauspost/compress v1.19.1
+	github.com/prometheus/client_golang v1.24.1
+)
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect

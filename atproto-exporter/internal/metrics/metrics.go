@@ -163,6 +163,15 @@ func (m *Metrics) FirehoseLagCollector() prometheus.Collector { return m.firehos
 // FederationPDSCollector returns the federation-PDS gauge.
 func (m *Metrics) FederationPDSCollector() prometheus.Collector { return m.federationPDS }
 
+// WSConnectedCollector returns the ws-connected gauge.
+func (m *Metrics) WSConnectedCollector() prometheus.Collector { return m.wsConnected }
+
+// WSReconnectsCollector returns the ws-reconnects counter.
+func (m *Metrics) WSReconnectsCollector() prometheus.Collector { return m.wsReconnects }
+
+// PLCPollErrorsCollector returns the PLC poll-errors counter.
+func (m *Metrics) PLCPollErrorsCollector() prometheus.Collector { return m.plcPollErrors }
+
 // TopNGauge applies a topn.Snapshot to a single-label gauge vector, setting the
 // current top entries and deleting any series that fell out of the top set.
 type TopNGauge struct {
