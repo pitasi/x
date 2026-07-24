@@ -146,6 +146,23 @@ func (m *Metrics) ObservePLCPollDuration(seconds float64) {
 	m.plcPollDuration.Observe(seconds)
 }
 
+// --- Accessors (used for assertions in tests) ---
+
+// EventsTotalVec returns the events counter vector.
+func (m *Metrics) EventsTotalVec() *prometheus.CounterVec { return m.eventsTotal }
+
+// PostsTotalVec returns the posts counter vector.
+func (m *Metrics) PostsTotalVec() *prometheus.CounterVec { return m.postsTotal }
+
+// PLCOperationsVec returns the PLC operations counter vector.
+func (m *Metrics) PLCOperationsVec() *prometheus.CounterVec { return m.plcOperations }
+
+// FirehoseLagCollector returns the firehose-lag gauge.
+func (m *Metrics) FirehoseLagCollector() prometheus.Collector { return m.firehoseLag }
+
+// FederationPDSCollector returns the federation-PDS gauge.
+func (m *Metrics) FederationPDSCollector() prometheus.Collector { return m.federationPDS }
+
 // TopNGauge applies a topn.Snapshot to a single-label gauge vector, setting the
 // current top entries and deleting any series that fell out of the top set.
 type TopNGauge struct {

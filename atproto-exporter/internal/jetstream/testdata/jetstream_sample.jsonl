@@ -1,0 +1,10 @@
+{"did":"did:plc:aaa","time_us":1700000000000001,"kind":"commit","commit":{"operation":"create","collection":"app.bsky.feed.post","rkey":"1","record":{"$type":"app.bsky.feed.post","text":"hello #golang see https://www.example.com/x","langs":["en"],"facets":[{"features":[{"$type":"app.bsky.richtext.facet#link","uri":"https://www.example.com/x"},{"$type":"app.bsky.richtext.facet#tag","tag":"golang"}]}]}}}
+{"did":"did:plc:bbb","time_us":1700000000000002,"kind":"commit","commit":{"operation":"create","collection":"app.bsky.feed.post","rkey":"2","record":{"$type":"app.bsky.feed.post","text":"konnichiwa","langs":["ja"],"embed":{"$type":"app.bsky.embed.external","external":{"uri":"https://blog.example.org/post"}}}}}
+{"did":"did:plc:ccc","time_us":1700000000000003,"kind":"commit","commit":{"operation":"create","collection":"app.bsky.feed.like","rkey":"3"}}
+{"did":"did:plc:ddd","time_us":1700000000000004,"kind":"commit","commit":{"operation":"create","collection":"app.bsky.graph.follow","rkey":"4"}}
+{"did":"did:plc:eee","time_us":1700000000000005,"kind":"commit","commit":{"operation":"create","collection":"com.example.weird","rkey":"5"}}
+{"did":"did:plc:fff","time_us":1700000000000006,"kind":"commit","commit":{"operation":"delete","collection":"app.bsky.feed.post","rkey":"1"}}
+{"did":"did:plc:ggg","time_us":1700000000000007,"kind":"commit","commit":{"operation":"create","collection":"app.bsky.feed.post","rkey":"6","record":{"$type":"app.bsky.feed.post","text":"more golang https://example.com/y","langs":["en-US"],"facets":[{"features":[{"$type":"app.bsky.richtext.facet#link","uri":"https://example.com/y"},{"$type":"app.bsky.richtext.facet#tag","tag":"golang"}]}]}}}
+{"did":"did:plc:hhh","time_us":1700000000000008,"kind":"identity","identity":{"handle":"someone.bsky.social"}}
+{"did":"did:plc:iii","time_us":1700000000000009,"kind":"account","account":{"active":true}}
+{"did":"did:plc:jjj","time_us":1700000000000010,"kind":"account","account":{"active":false,"status":"deleted"}}
