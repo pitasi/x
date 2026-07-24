@@ -15,7 +15,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 - [ ] **Human review**
 
 ## Phase 2: Jetstream slice
-- [ ] **T5** `metrics` package — all collectors + registry + `TopNGauge.Sync` eviction
+- [x] **T5** `metrics` package — all collectors + registry + `TopNGauge.Sync` eviction
 - [ ] **T6** Jetstream event pipeline (bytes → metrics) + cursor persist/rewind
 - [ ] **T7** Jetstream WS consumer — connect, zstd (embedded dict), backoff+jitter, failover
 
