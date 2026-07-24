@@ -7,7 +7,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 - [x] **T1** Module + config (flags/env/defaults) + runnable HTTP skeleton (`/healthz`, `/metrics`)
 - [x] **T2** `normalize` package — collection bucketing + language normalization (TDD)
 - [x] **T3** `topn` package — bounded min-heap + rolling window + eviction diff (TDD)
-- [ ] **T4** `cursor` package — atomic read/write/round-trip + rewind (TDD)
+- [x] **T4** `cursor` package — atomic read/write/round-trip + rewind (TDD)
 
 ### ✅ Checkpoint A
 - [ ] `go build ./...`, `go test -race ./...`, `go vet ./...`, `gofmt -l .` clean
