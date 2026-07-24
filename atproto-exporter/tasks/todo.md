@@ -33,7 +33,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 
 ## Phase 4: Integration & wiring
 - [x] **T9** `main` wiring — goroutines, context shutdown, signals, graceful degradation
-- [ ] **T10** Integration test (fixture replay + idempotency) + graceful-degradation test
+- [x] **T10** Integration test (fixture replay + idempotency) + graceful-degradation test
 
 ### ✅ Checkpoint D
 - [ ] `go test -race ./...` green incl. integration

@@ -160,6 +160,9 @@ func (m *Metrics) PLCOperationsVec() *prometheus.CounterVec { return m.plcOperat
 // FirehoseLagCollector returns the firehose-lag gauge.
 func (m *Metrics) FirehoseLagCollector() prometheus.Collector { return m.firehoseLag }
 
+// EventsProcessedCollector returns the events-processed counter.
+func (m *Metrics) EventsProcessedCollector() prometheus.Collector { return m.eventsProcessed }
+
 // FederationPDSCollector returns the federation-PDS gauge.
 func (m *Metrics) FederationPDSCollector() prometheus.Collector { return m.federationPDS }
 
