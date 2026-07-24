@@ -6,7 +6,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 ## Phase 1: Foundation
 - [x] **T1** Module + config (flags/env/defaults) + runnable HTTP skeleton (`/healthz`, `/metrics`)
 - [x] **T2** `normalize` package — collection bucketing + language normalization (TDD)
-- [ ] **T3** `topn` package — bounded min-heap + rolling window + eviction diff (TDD)
+- [x] **T3** `topn` package — bounded min-heap + rolling window + eviction diff (TDD)
 - [ ] **T4** `cursor` package — atomic read/write/round-trip + rewind (TDD)
 
 ### ✅ Checkpoint A
