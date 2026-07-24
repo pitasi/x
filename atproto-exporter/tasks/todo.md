@@ -41,8 +41,8 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 - [ ] **Human review**
 
 ## Phase 5: Deploy & docs
-- [ ] **T11** Dockerfile + docker-compose (exporter + Prometheus + Grafana) + provisioning
-- [ ] **T12** Grafana dashboard JSON (all panels + `$datasource` variable)
+- [x] **T11** Dockerfile + docker-compose (exporter + Prometheus + Grafana) + provisioning
+- [x] **T12** Grafana dashboard JSON (all panels + `$datasource` variable)
 - [ ] **T13** README + ADR 0001/0002 + Makefile (`update-zstd-dict`)
 
 ### ✅ Checkpoint E (Complete)
