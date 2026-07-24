@@ -1,0 +1,6 @@
+{"did":"did:plc:aaa","operation":{"type":"plc_operation","prev":null,"services":{"atproto_pds":{"type":"AtprotoPersonalDataServer","endpoint":"https://pds1.example.com"}}},"cid":"bafy1","nullified":false,"createdAt":"2024-01-01T00:00:01.000Z"}
+{"did":"did:plc:aaa","operation":{"type":"plc_operation","prev":"bafy1","services":{"atproto_pds":{"type":"AtprotoPersonalDataServer","endpoint":"https://pds1.example.com"}}},"cid":"bafy2","nullified":false,"createdAt":"2024-01-01T00:00:02.000Z"}
+{"did":"did:plc:bbb","operation":{"type":"plc_tombstone","prev":"bafyx"},"cid":"bafy3","nullified":false,"createdAt":"2024-01-01T00:00:03.000Z"}
+{"did":"did:plc:ccc","operation":{"type":"plc_operation","prev":null,"services":{"atproto_pds":{"type":"AtprotoPersonalDataServer","endpoint":"https://pds2.example.com"}}},"cid":"bafy4","nullified":false,"createdAt":"2024-01-01T00:00:04.000Z"}
+{"did":"did:plc:ddd","operation":{"type":"create","handle":"legacy.example","service":"https://pds1.example.com"},"cid":"bafy5","nullified":false,"createdAt":"2024-01-01T00:00:05.000Z"}
+{"did":"did:plc:eee","operation":{"type":"plc_operation","prev":null,"services":{"atproto_pds":{"type":"AtprotoPersonalDataServer","endpoint":"https://pds2.example.com"}}},"cid":"bafy6","nullified":true,"createdAt":"2024-01-01T00:00:06.000Z"}

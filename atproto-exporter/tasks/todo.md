@@ -25,7 +25,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 - [ ] **Human review**
 
 ## Phase 3: PLC slice
-- [ ] **T8** PLC poll loop — op counting + distinct-PDS gauge + cursor + self-metrics
+- [x] **T8** PLC poll loop — op counting + distinct-PDS gauge + cursor + self-metrics
 
 ### ✅ Checkpoint C
 - [ ] PLC unit tests green
