@@ -32,7 +32,7 @@ and `SPEC.md` for the contract. Do not start until the plan is approved.
 - [ ] `plc_operations_total` + `federation_pds_count` populate on live run
 
 ## Phase 4: Integration & wiring
-- [ ] **T9** `main` wiring — goroutines, context shutdown, signals, graceful degradation
+- [x] **T9** `main` wiring — goroutines, context shutdown, signals, graceful degradation
 - [ ] **T10** Integration test (fixture replay + idempotency) + graceful-degradation test
 
 ### ✅ Checkpoint D
