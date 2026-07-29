@@ -1,98 +1,136 @@
 /* =========================================================================
    garden.anto.pt — interactions
    collection: live search + sortable columns (+ mobile sort select)
+   drives either a table.data or a [data-grid] of cards
    ========================================================================= */
 (function () {
   'use strict';
 
-  var table = document.querySelector('table.data');
-  if (!table) return;
+  var GRID_KEYS = ['title', 'rating', 'imdb', 'added'];
 
-  var tbody = table.tBodies[0];
-  var rows = Array.prototype.slice.call(tbody.rows);
+  // some covers have rotted upstream; drop the broken img so the title shows through
+  function dropBroken(img) {
+    if (img && img.tagName === 'IMG' && img.closest('.poster-card')) img.remove();
+  }
+  window.addEventListener('error', function (e) { dropBroken(e.target); }, true);
+  window.addEventListener('load', function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.poster-card img'), function (img) {
+      if (img.complete && img.naturalWidth === 0) dropBroken(img);
+    });
+  });
+
+  var table = document.querySelector('table.data');
+  var grid = document.querySelector('[data-grid]');
+  var container = table ? table.tBodies[0] : grid;
+  if (!container) return;
+
+  var items = Array.prototype.slice.call(table ? container.rows : container.children);
+  var headers = table ? table.tHead.rows[0].cells : [];
   var searchInput = document.querySelector('[data-search]');
   var countEl = document.querySelector('[data-count]');
   var countNoun = (countEl && countEl.getAttribute('data-noun')) || 'titles';
-  var totalCount = rows.length;
+  var totalCount = items.length;
   var sortSelect = document.querySelector('[data-sort-select]');
-  var unratedToggle = document.querySelector('[data-unrated-filter]');
+  var genreSelect = document.querySelector('[data-genre-select]');
+  var flagToggle = document.querySelector('[data-flag-filter]');
+  var flagAttr = flagToggle ? 'data-' + flagToggle.getAttribute('data-flag-filter') : null;
 
-  var headers = table.tHead.rows[0].cells;
   var initialKey = 'title';
   var initialDir = 1;
-  for (var h = 0; h < headers.length; h++) {
-    var aria = headers[h].getAttribute('aria-sort');
-    var key = headers[h].getAttribute('data-key');
-    if (aria && key) {
-      initialKey = key;
-      initialDir = aria === 'descending' ? -1 : 1;
+  if (table) {
+    for (var h = 0; h < headers.length; h++) {
+      var aria = headers[h].getAttribute('aria-sort');
+      var key = headers[h].getAttribute('data-key');
+      if (aria && key) {
+        initialKey = key;
+        initialDir = aria === 'descending' ? -1 : 1;
+      }
     }
+  } else if (sortSelect) {
+    var initial = sortSelect.value.split(':');
+    initialKey = initial[0];
+    initialDir = initial[1] === 'asc' ? 1 : -1;
   }
 
-  var state = { q: '', key: initialKey, dir: initialDir, unrated: false };
+  var state = { q: '', key: initialKey, dir: initialDir, flag: false, genre: '' };
 
-  rows.forEach(function (tr) { tr._unrated = tr.hasAttribute('data-unrated'); });
+  // titles are never numeric: parseFloat('12th Fail') is 12, which would make
+  // every digit-leading title compare equal to the string ones and never sort
+  function val(raw, key) {
+    raw = (raw || '').trim();
+    if (key === 'title') return raw.toLowerCase();
+    var n = parseFloat(raw);
+    return isNaN(n) ? raw.toLowerCase() : n;
+  }
 
-  rows.forEach(function (tr) {
-    for (var i = 0; i < tr.cells.length; i++) {
-      var cell = tr.cells[i];
+  items.forEach(function (el) {
+    el._flag = flagAttr ? el.hasAttribute(flagAttr) : false;
+    el._genres = (el.getAttribute('data-genres') || '').toLowerCase();
+
+    if (!table) {
+      GRID_KEYS.forEach(function (k) { el['_' + k] = val(el.getAttribute('data-sort-' + k), k); });
+      el._q = (el.getAttribute('data-q') || el.textContent).trim().toLowerCase();
+      return;
+    }
+
+    for (var i = 0; i < el.cells.length; i++) {
+      var cell = el.cells[i];
       var k = headers[i] && headers[i].getAttribute('data-key');
       if (!k) continue;
       var raw = cell.getAttribute('data-sort');
       if (raw === null) raw = cell.textContent;
-      var num = parseFloat(raw);
-      tr['_' + k] = isNaN(num) ? (raw || '').trim().toLowerCase() : num;
-      if (k === 'title') tr._q = cell.textContent.trim().toLowerCase() + ' ' + (cell.getAttribute('data-extra') || '').toLowerCase();
+      el['_' + k] = val(raw, k);
+      if (k === 'title') el._q = cell.textContent.trim().toLowerCase() + ' ' + (cell.getAttribute('data-extra') || '').toLowerCase();
     }
-    if (tr._title === undefined) {
-      tr._title = (tr.cells[0].getAttribute('data-sort') || tr.cells[0].textContent).trim().toLowerCase();
+    if (el._title === undefined) {
+      el._title = val(el.cells[0].getAttribute('data-sort') || el.cells[0].textContent, 'title');
     }
-    if (tr._q === undefined) {
-      tr._q = tr.cells[0].textContent.trim().toLowerCase();
+    if (el._q === undefined) {
+      el._q = el.cells[0].textContent.trim().toLowerCase();
     }
   });
+
+  function byTitle(a, b) { return a._title.localeCompare(b._title); }
 
   function compare(a, b) {
     var av = a['_' + state.key];
     var bv = b['_' + state.key];
-    if (state.key === 'title') {
-      if (av < bv) return -1 * state.dir;
-      if (av > bv) return 1 * state.dir;
-      return 0;
-    }
+    if (state.key === 'title') return byTitle(a, b) * state.dir;
     var avNum = typeof av === 'number' ? av : null;
     var bvNum = typeof bv === 'number' ? bv : null;
-    if (avNum === null && bvNum === null) return a._title < b._title ? -1 : 1;
+    if (avNum === null && bvNum === null) return byTitle(a, b);
     if (avNum === null) return 1;
     if (bvNum === null) return -1;
-    if (avNum === bvNum) return a._title < b._title ? -1 : 1;
+    if (avNum === bvNum) return byTitle(a, b);
     return (avNum - bvNum) * state.dir;
   }
 
   function render() {
     var q = state.q;
-    var visible = rows.filter(function (tr) {
-      if (state.unrated && !tr._unrated) return false;
-      return !q || tr._q.indexOf(q) !== -1;
+    var genre = state.genre;
+    var visible = items.filter(function (el) {
+      if (state.flag && !el._flag) return false;
+      if (genre && el._genres.indexOf('|' + genre + '|') === -1) return false;
+      return !q || el._q.indexOf(q) !== -1;
     });
     visible.sort(compare);
 
     var frag = document.createDocumentFragment();
-    visible.forEach(function (tr) { tr.style.display = ''; frag.appendChild(tr); });
-    rows.forEach(function (tr) {
-      if (visible.indexOf(tr) === -1) tr.style.display = 'none';
+    visible.forEach(function (el) { el.style.display = ''; frag.appendChild(el); });
+    items.forEach(function (el) {
+      if (visible.indexOf(el) === -1) el.style.display = 'none';
     });
-    tbody.appendChild(frag);
+    container.appendChild(frag);
     var shown = visible.length;
 
     if (countEl) {
-      if (q || state.unrated) countEl.innerHTML = '<b>' + shown + '</b> of ' + totalCount;
+      if (q || state.flag || genre) countEl.innerHTML = '<b>' + shown + '</b> of ' + totalCount;
       else countEl.innerHTML = '<b>' + totalCount + '</b> ' + countNoun;
     }
 
     var es = document.querySelector('[data-empty]');
     if (es) es.hidden = shown !== 0;
-    table.hidden = shown === 0;
+    (table || grid).hidden = shown === 0;
 
     for (var i = 0; i < headers.length; i++) {
       var key = headers[i].getAttribute('data-key');
@@ -132,9 +170,16 @@
     });
   }
 
-  if (unratedToggle) {
-    unratedToggle.addEventListener('change', function () {
-      state.unrated = unratedToggle.checked;
+  if (flagToggle) {
+    flagToggle.addEventListener('change', function () {
+      state.flag = flagToggle.checked;
+      render();
+    });
+  }
+
+  if (genreSelect) {
+    genreSelect.addEventListener('change', function () {
+      state.genre = genreSelect.value;
       render();
     });
   }

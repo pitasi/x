@@ -72,6 +72,7 @@ body {
 .masthead {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--s2);
   margin-bottom: clamp(28px, 6vw, 56px);
 }
@@ -100,7 +101,8 @@ body {
   color: var(--faint);
   display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 2px 8px;
   margin-left: auto;
 }
 .crumbs a { color: var(--muted); }
@@ -150,6 +152,13 @@ a:visited:hover { color: var(--link-visited); }
   margin-top: var(--s5);
   margin-bottom: var(--s2);
 }
+
+.subnav { margin-top: var(--s3); font-size: 13.5px; }
+.subnav a { text-decoration: none; }
+.subnav a::before { content: "★ "; color: var(--faint); }
+.subnav a:hover { text-decoration: underline; }
+.subnav .arrow { display: inline-block; transition: transform .2s; }
+.subnav a:hover .arrow { transform: translateX(4px); }
 
 .prose p { margin-bottom: var(--s3); }
 .prose ul { padding-left: var(--s5); margin-bottom: var(--s4); }
@@ -216,6 +225,16 @@ a:visited:hover { color: var(--link-visited); }
 .prev-card .more:hover { text-decoration: underline; }
 .prev-card .more .arrow { display:inline-block; transition: transform .2s; }
 .prev-card:hover .more .arrow { transform: translateX(4px); }
+
+.prev-card .actions { display: flex; border-top: 1px solid var(--line); }
+.prev-card .actions .more { border-top: 0; flex: 1 1 auto; }
+.prev-card .actions .more.alt {
+  flex: 0 0 auto;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+}
+.prev-card .actions .more.alt::before { content: "★ "; color: var(--faint); }
+.prev-card .actions .more.alt:hover { color: var(--link); }
 
 /* =========================================================================
    COLLECTION (table) page
@@ -289,10 +308,12 @@ a:visited:hover { color: var(--link-visited); }
 }
 
 .sortctl { display: none; align-items: center; gap: 6px; font-size: 13px; }
+.sortctl.show { display: inline-flex; }
 .sortctl label { color: var(--faint); }
 .sortctl select {
   font: inherit; font-size: 13px;
   padding: 8px 10px;
+  max-width: 100%;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-s);
   background: var(--surface);
@@ -424,6 +445,125 @@ table.data thead th.date { color: var(--muted); }
 .empty-state b { color: var(--ink); }
 
 /* =========================================================================
+   TOP RATED (poster grid)
+   ========================================================================= */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--s5) var(--s3);
+}
+
+.poster-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.poster-card:visited { color: var(--ink); }
+.poster-card:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; border-radius: var(--radius); }
+
+.poster-card .art {
+  position: relative;
+  display: block;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--line) 70%, var(--bg));
+  border: 1px solid var(--line-strong);
+  transition: border-color .18s, box-shadow .18s;
+}
+.poster-card .art img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.poster-card .noart {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s3);
+  text-align: center;
+  font-size: 12px;
+  color: var(--faint);
+  text-wrap: balance;
+}
+@media (hover: hover) {
+  .poster-card:hover .art {
+    border-color: var(--link);
+    box-shadow: 0 10px 26px -16px rgba(28,70,214,.7);
+  }
+  .poster-card:hover .art img { transform: scale(1.04); }
+  .poster-card:hover .t { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 6px;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--ink) 90%, transparent);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.poster-card .chip {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  box-shadow: 0 1px 5px rgba(0,0,0,.4);
+}
+.poster-card[data-best] .chip { background: color-mix(in srgb, var(--link) 94%, transparent); }
+.chip .den { font-weight: 400; opacity: .65; }
+.chip .meter i { width: 3px; height: 9px; background: rgba(255,255,255,.34); }
+.chip .meter i.on { background: #fff; }
+
+.poster-card .info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.poster-card .t {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  min-height: 2.7em;
+  overflow-wrap: anywhere;
+}
+.poster-card .sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.poster-card .sub b { color: var(--ink); font-weight: 600; }
+.poster-card .sub .dot { color: var(--line-strong); }
+.poster-card .sub .added { color: var(--faint); }
+
+.legend .swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  vertical-align: -1px;
+  background: var(--ink);
+}
+.legend .swatch.best { background: var(--link); }
+
+/* =========================================================================
    FOOTER
    ========================================================================= */
 .foot {
@@ -450,6 +590,7 @@ table.data thead th.date { color: var(--muted); }
   body { font-size: 15px; }
 
   .sortctl { display: inline-flex; margin-left: auto; }
+  .sortctl.show { margin-left: 0; }
 
   table.data thead { display: none; }
   table.data, table.data tbody, table.data tr, table.data td { display: block; }
@@ -490,8 +631,16 @@ table.data thead th.date { color: var(--muted); }
   .status { justify-content: flex-end; }
 }
 
+@media (max-width: 400px) {
+  .poster-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s4) var(--s2);
+  }
+}
+
 @media (max-width: 380px) {
   .meter i { width: 4px; }
+  .chip .meter i { width: 3px; }
 }
 
 @media (min-width: 1100px) {

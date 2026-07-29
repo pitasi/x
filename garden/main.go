@@ -136,6 +136,22 @@ func main() {
 		Books: books,
 	}))
 
+	topMovies, topShows := topRated(movies), topRated(shows)
+	http.HandleFunc("GET /movies/top/{$}", sectionHandler("top.html", topPage{
+		Slug:   "movies",
+		Label:  "movies",
+		Noun:   "titles",
+		Items:  topMovies,
+		Genres: genresOf(topMovies),
+	}))
+	http.HandleFunc("GET /shows/top/{$}", sectionHandler("top.html", topPage{
+		Slug:   "shows",
+		Label:  "tv shows",
+		Noun:   "shows",
+		Items:  topShows,
+		Genres: genresOf(topShows),
+	}))
+
 	log.Println("listening on", "0.0.0.0:8080")
 	panic(http.ListenAndServe("0.0.0.0:8080", nil))
 }
@@ -176,6 +192,27 @@ func templateFuncs() template.FuncMap {
 			return m
 		},
 		"emptyMeter": func() []bool { return make([]bool, 7) },
+		"lower":      strings.ToLower,
+		// imdb's cdn serves the untouched poster at ~4MB; ask it for a scaled one
+		"coverAt": func(url string, w int) string {
+			if base, ok := strings.CutSuffix(url, "._V1_.jpg"); ok {
+				return fmt.Sprintf("%s._V1_QL75_UX%d_.jpg", base, w)
+			}
+			return url
+		},
+		// pipe-delimited so the client can match a whole genre, not a substring
+		"genreAttr": func(gs []string) string {
+			if len(gs) == 0 {
+				return ""
+			}
+			var b strings.Builder
+			b.WriteByte('|')
+			for _, g := range gs {
+				b.WriteString(strings.ToLower(prettyLinks(g)))
+				b.WriteByte('|')
+			}
+			return b.String()
+		},
 		"dateShort": func(t time.Time) string {
 			if t.IsZero() {
 				return "—"
@@ -189,6 +226,48 @@ func templateFuncs() template.FuncMap {
 			return strconv.FormatInt(t.Unix(), 10)
 		},
 	}
+}
+
+type topPage struct {
+	Slug   string
+	Label  string
+	Noun   string
+	Items  []frontmatterData
+	Genres []string
+}
+
+// topRated keeps only the 6s and 7s, best first.
+func topRated(items []frontmatterData) []frontmatterData {
+	var out []frontmatterData
+	for _, it := range items {
+		if it.Rating >= 6 {
+			out = append(out, it)
+		}
+	}
+	sort.SliceStable(out, func(i, j int) bool {
+		if out[i].Rating != out[j].Rating {
+			return out[i].Rating > out[j].Rating
+		}
+		return sortKey(out[i].Title) < sortKey(out[j].Title)
+	})
+	return out
+}
+
+func genresOf(items []frontmatterData) []string {
+	seen := map[string]bool{}
+	var out []string
+	for _, it := range items {
+		for _, g := range it.Genre {
+			g = prettyLinks(g)
+			if g == "" || seen[g] {
+				continue
+			}
+			seen[g] = true
+			out = append(out, g)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool { return sortKey(out[i]) < sortKey(out[j]) })
+	return out
 }
 
 type collectionPreview struct {

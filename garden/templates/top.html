@@ -1,0 +1,89 @@
+{{define "title"}}top rated {{ .Label }} — garden.anto.pt{{end}}
+{{define "description"}}the {{ .Label }} i rated highest — only 6s and 7s out of 7.{{end}}
+{{define "screen"}}top {{ .Slug }}{{end}}
+{{define "crumbs"}}
+<nav class="crumbs">
+  <a href="/">index</a>
+  <span class="sep">/</span>
+  <a href="/{{ .Slug }}">{{ .Label }}</a>
+  <span class="sep">/</span>
+  <span class="here">top rated</span>
+</nav>
+{{end}}
+{{define "body"}}
+<div class="titleblock">
+  <h1>top rated {{ .Label }}</h1>
+  <p class="lede">the good stuff — only what i scored 6 or 7 on a personal <a href="/ratings">1–7 scale</a>. everything else lives in the <a href="/{{ .Slug }}">full list</a>.</p>
+</div>
+
+<div class="toolbar">
+  <div class="search">
+    <span class="icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.2"/><line x1="9.2" y1="9.2" x2="12.5" y2="12.5" stroke-linecap="round"/></svg></span>
+    <input type="search" data-search placeholder="search titles…" aria-label="search top rated {{ .Label }}" autocomplete="off" />
+  </div>
+  <span class="count-pill" data-count data-noun="{{ .Noun }}"></span>
+  <label class="filter-toggle">
+    <input type="checkbox" data-flag-filter="best" />
+    <span>7/7 only</span>
+  </label>
+  <span class="sortctl show">
+    <label for="genresel">genre</label>
+    <select id="genresel" data-genre-select>
+      <option value="">all</option>
+      {{ range .Genres }}
+      <option value="{{ lower . }}">{{ lower . }}</option>
+      {{ end }}
+    </select>
+  </span>
+  <span class="sortctl show">
+    <label for="sortsel">sort</label>
+    <select id="sortsel" data-sort-select>
+      <option value="rating:desc" selected>my rating ↓</option>
+      <option value="imdb:desc">imdb ↓</option>
+      <option value="added:desc">recently added</option>
+      <option value="added:asc">oldest first</option>
+      <option value="title:asc">title A→Z</option>
+      <option value="title:desc">title Z→A</option>
+    </select>
+  </span>
+</div>
+
+<div class="poster-grid" data-grid>
+  {{ range .Items }}
+  <a class="poster-card"{{ if .Source }} href="{{ .Source }}" target="_blank" rel="noopener"{{ end }}{{ if eq .Rating 7 }} data-best{{ end }}
+     data-q="{{ .Title }} {{ range .Genre }}{{ lower (prettyLink .) }} {{ end }}"
+     data-genres="{{ genreAttr .Genre }}"
+     data-sort-title="{{ sortKey .Title }}"
+     data-sort-rating="{{ .Rating }}"
+     data-sort-imdb="{{ if .ScoreIMDB }}{{ .ScoreIMDB }}{{ end }}"
+     data-sort-added="{{ unixTime .Created }}">
+    <span class="art">
+      <span class="noart">{{ .Title }}</span>
+      {{ if .Cover }}<img src="{{ coverAt .Cover 300 }}"
+        srcset="{{ coverAt .Cover 200 }} 200w, {{ coverAt .Cover 300 }} 300w, {{ coverAt .Cover 400 }} 400w, {{ coverAt .Cover 600 }} 600w"
+        sizes="(max-width: 420px) 46vw, (max-width: 700px) 31vw, 180px"
+        width="200" height="300" alt="" loading="lazy" decoding="async" />{{ end }}
+      <span class="chip" title="{{ .Rating }} out of 7"><span class="meter">{{ range ratingMeter .Rating }}{{ if . }}<i class="on"></i>{{ else }}<i></i>{{ end }}{{ end }}</span><span class="v">{{ .Rating }}<span class="den">/7</span></span></span>
+    </span>
+    <span class="info">
+      <span class="t">{{ .Title }}</span>
+      <span class="sub">
+        {{ if .ScoreIMDB }}<span>imdb <b>{{ printf "%.1f" .ScoreIMDB }}</b></span>{{ end }}
+        {{ if .Year }}<span class="dot">·</span><span>{{ .Year }}</span>{{ end }}
+      </span>
+      <span class="sub"><span class="added">added {{ dateShort .Created }}</span></span>
+    </span>
+  </a>
+  {{ end }}
+</div>
+
+<div class="empty-state" data-empty hidden>
+  <span class="big">🌱</span>
+  nothing here yet — try a different search or genre.
+</div>
+
+<p class="legend">
+  <span class="chip"><span class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="v">6<span class="den">/7</span></span></span>
+  <span>the badge on each cover is my score. <span class="swatch best"></span> means a 7/7. tap a cover to open it on imdb.</span>
+</p>
+{{ end }}

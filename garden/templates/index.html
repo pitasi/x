@@ -17,7 +17,10 @@
       <li><span class="t">{{ .Title }}</span><span class="r">{{ if .Rating }}{{ .Rating }}/7{{ else }}—{{ end }}</span></li>
       {{ end }}
     </ul>
-    <a class="more" href="/movies">all {{ .Movies.Count }} movies <span class="arrow">→</span></a>
+    <span class="actions">
+      <a class="more" href="/movies">all {{ .Movies.Count }} movies <span class="arrow">→</span></a>
+      <a class="more alt" href="/movies/top">top rated</a>
+    </span>
   </article>
 
   <article class="prev-card">
@@ -30,7 +33,10 @@
       <li><span class="t">{{ .Title }}</span><span class="r">{{ if .Rating }}{{ .Rating }}/7{{ else }}—{{ end }}</span></li>
       {{ end }}
     </ul>
-    <a class="more" href="/shows">all {{ .Shows.Count }} shows <span class="arrow">→</span></a>
+    <span class="actions">
+      <a class="more" href="/shows">all {{ .Shows.Count }} shows <span class="arrow">→</span></a>
+      <a class="more alt" href="/shows/top">top rated</a>
+    </span>
   </article>
 
   <article class="prev-card">
