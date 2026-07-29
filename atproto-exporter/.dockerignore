@@ -1,0 +1,6 @@
+data/
+tasks/
+docs/
+deploy/
+*.md
+.git/

@@ -1,0 +1,43 @@
+# Self-contained local stack: the exporter, a Prometheus that scrapes it, and a
+# Grafana with the datasource + dashboard auto-provisioned. Run from this dir:
+#   docker compose up --build
+# Then open Grafana at http://localhost:3000 (anonymous admin).
+services:
+  exporter:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "9200:9200"
+    volumes:
+      - exporter-data:/data
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - exporter
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_DEFAULT_THEME=dark
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  exporter-data:
