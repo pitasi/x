@@ -1,0 +1,21 @@
+{
+  "name": "clipper-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "test": "tsx scripts/smoke.ts",
+    "try": "tsx scripts/try.ts"
+  },
+  "dependencies": {
+    "defuddle": "^0.19.2",
+    "linkedom": "^0.18.0",
+    "playwright": "1.62.1",
+    "tsx": "^4.23.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.0"
+  }
+}

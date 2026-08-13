@@ -1,0 +1,9 @@
+{
+  "id": "clipper-client",
+  "name": "Clipper Client",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Send a URL to clipper-server and save the returned note in the vault.",
+  "author": "Antonio Pitasi",
+  "isDesktopOnly": false
+}
