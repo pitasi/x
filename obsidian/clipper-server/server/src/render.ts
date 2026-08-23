@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { chromium, type BrowserContext } from 'playwright';
 
 // full chromium ("new headless") + a normal UA: the default headless shell
@@ -16,6 +17,10 @@ async function context(): Promise<BrowserContext> {
       userAgent: UA,
       args: ['--disable-blink-features=AutomationControlled'],
     });
+    if (process.env.CLIPPER_STORAGE_STATE) {
+      const state = JSON.parse(readFileSync(process.env.CLIPPER_STORAGE_STATE, 'utf8'));
+      await ctx.addCookies(state.cookies ?? []);
+    }
     ctx.on('close', () => (ctx = undefined));
   }
   return ctx;
