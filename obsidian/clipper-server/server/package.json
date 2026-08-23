@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "start": "tsx src/main.ts",
-    "test": "tsx scripts/smoke.ts",
+    "test": "tsx scripts/clipper.test.ts && tsx scripts/smoke.ts",
     "try": "tsx scripts/try.ts"
   },
   "dependencies": {

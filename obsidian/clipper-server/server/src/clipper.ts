@@ -46,6 +46,12 @@ const settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
 export const templates: Template[] = (settings.template_list as string[])
   .map((id) => settings['template_' + id])
   .filter(Boolean);
+// Match the browser clipper, which unescapes stored property values before compiling them.
+for (const template of templates) {
+  for (const property of template.properties ?? []) {
+    property.value = property.value.replace(/\\"/g, '"').replace(/\\n/g, '\n');
+  }
+}
 const propertyTypes: Record<string, string> = Object.fromEntries(
   (settings.property_types ?? []).map((p: { name: string; type: string }) => [p.name, p.type])
 );
