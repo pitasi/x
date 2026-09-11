@@ -1,6 +1,6 @@
 <div class="color-picker">
     <button class="toggle" id="toggleBtn" aria-label="Change background color" title="Change background color"></button>
-    <dialog id="colorDialog">
+    <dialog id="colorDialog" aria-label="Choose a background color">
         <div class="color-options">
             <button class="color-option" id="colorClose" aria-label="Close background color picker">×</button>
             {{ range .Colors }}
@@ -12,8 +12,9 @@
                 {{ end }}
                 style="background-color: {{ . }}"
                 data-color="{{ . }}"
-                aria-label="Set background color"
-            >{{ if eq $.Selected . }}✌️{{ end }}</button>
+                aria-label="Set background color to {{ . }}"
+                aria-pressed="{{ if eq $.Selected . }}true{{ else }}false{{ end }}"
+            >{{ if eq $.Selected . }}✓{{ end }}</button>
             {{ end }}
         </div>
     </dialog>

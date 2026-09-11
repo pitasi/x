@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"net/http"
+	"os"
 	"time"
 
 	"anto.pt/x/log"
@@ -16,16 +17,21 @@ import (
 var logger = log.Module("gosmic")
 
 func main() {
+	listenAddr := os.Getenv("LISTEN_ADDR")
+	if listenAddr == "" {
+		listenAddr = "0.0.0.0:8080"
+	}
+
 	mux := http.NewServeMux()
 
 	httpx.RegisterWebsite("anto.pt", &antopt.Website{
 		Colors: []template.CSS{
-			"#dde6f0", // light-blue terminal (default)
-			"#efe9df", // warm paper
-			"#f1ead0", // legal-pad yellow
-			"#dfeee4", // soft mint
-			"#f1e3e8", // faint rose
-			"#f5f6f8", // near white
+			"#b9b5ff", // periwinkle (default)
+			"#ff91bc", // bubblegum
+			"#ffe66b", // sunshine
+			"#91dfcf", // sea glass
+			"#a8d8ff", // sky blue
+			"#f5f6f8", // quiet mode
 		},
 	}, mux)
 	httpx.RegisterWebsite("anto.ph", antoph.Website{}, mux)
@@ -34,7 +40,7 @@ func main() {
 	handler = httpx.RewriteHost(handler)
 
 	s := http.Server{
-		Addr:        "0.0.0.0:8080",
+		Addr:        listenAddr,
 		Handler:     handler,
 		ReadTimeout: 10 * time.Second,
 	}

@@ -2,13 +2,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="keywords" content="Antonio Pitasi, software engineer, blockchain, distributed systems, photography">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon.png">
-<link rel="icon" type="image/webp" href="/static/images/favicon.webp">
-<link rel="icon" href="/static/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-antonio.png?v={{ hash "static/images/favicon-antonio.png" }}">
+<link rel="icon" type="image/webp" href="/static/images/favicon-antonio.webp?v={{ hash "static/images/favicon-antonio.webp" }}">
+<link rel="icon" href="/static/images/favicon-antonio.ico?v={{ hash "static/images/favicon-antonio.ico" }}">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png?v={{ hash "static/images/apple-touch-icon.png" }}">
 <link rel="stylesheet" href="/static/style.css?v={{ hash "static/style.css" }}">
 <link href="/articles/feed.atom" type="application/atom+xml" rel="alternate" title="Articles">
 <script defer data-domain="anto.pt" src="/js/ps.js"></script>
 {{ if .SelectedColor }}
-<style>:root { --background: {{ .SelectedColor }} }</style>
+<style>:root {
+  --background: {{ .SelectedColor }}{{ if eq .SelectedColor "#ffe66b" }};
+  --nav-active: var(--bubblegum){{ end }}
+}</style>
 {{ end }}
 {{ end }}
