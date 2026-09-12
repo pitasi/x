@@ -1,14 +1,24 @@
 {{define "title"}}garden.anto.pt{{end}}
 {{define "screen"}}index{{end}}
 {{define "body"}}
-<div class="titleblock">
-  <h1>index</h1>
-  <p class="lede">a little corner of the internet where i keep track of things i've enjoyed — or hope to. tend it like a garden.</p>
+<div class="titleblock garden-intro">
+  <div>
+    <h1>things worth keeping</h1>
+    <p class="lede">my unruly patch of movies, stories and places — some loved, some still waiting to grow.</p>
+  </div>
+  <svg class="garden-mark" viewBox="0 0 220 220" aria-hidden="true">
+    <circle cx="164" cy="47" r="31" fill="#fffce8" stroke="#24351f" stroke-width="3"/>
+    <path d="M110 212V52" fill="none" stroke="#24351f" stroke-width="7" stroke-linecap="round"/>
+    <path d="M110 99c-38 3-60-19-62-46 34-2 55 16 62 46Z" fill="#3f6f44" stroke="#24351f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M110 132c42 1 61-20 66-51-39-4-62 18-66 51Z" fill="#b8d58e" stroke="#24351f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M110 168c-31 1-47-15-51-38 29-3 48 14 51 38Z" fill="#d9654f" stroke="#24351f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M20 205q43-29 90-4 48-31 94 4v15H20Z" fill="#91b47d" stroke="#24351f" stroke-width="3" stroke-linejoin="round"/>
+  </svg>
 </div>
 
 <section class="collection-preview">
   <article class="prev-card">
-    <a class="head" href="/movies" style="text-decoration:none;">
+    <a class="head" href="/movies">
       <span class="top"><span class="name">movies</span><span class="count">{{ .Movies.Count }} titles</span></span>
       <span class="desc">movies i've seen or that i'd like to see</span>
     </a>
@@ -24,7 +34,7 @@
   </article>
 
   <article class="prev-card">
-    <a class="head" href="/shows" style="text-decoration:none;">
+    <a class="head" href="/shows">
       <span class="top"><span class="name">tv shows</span><span class="count">{{ .Shows.Count }} shows</span></span>
       <span class="desc">tv shows i've seen or that i'd like to see</span>
     </a>
@@ -40,7 +50,7 @@
   </article>
 
   <article class="prev-card">
-    <a class="head" href="/books" style="text-decoration:none;">
+    <a class="head" href="/books">
       <span class="top"><span class="name">books</span><span class="count">{{ .Books.Count }} titles</span></span>
       <span class="desc">titles i've read or that i'd like to read</span>
     </a>
@@ -53,7 +63,7 @@
   </article>
 
   <article class="prev-card">
-    <a class="head" href="/places" style="text-decoration:none;">
+    <a class="head" href="/places">
       <span class="top"><span class="name">places</span><span class="count">{{ .Places.Count }} places</span></span>
       <span class="desc">places i've been to or that i'd like to visit</span>
     </a>

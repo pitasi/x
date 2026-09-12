@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{block "title" .}}garden.anto.pt{{end}}</title>
   <meta name="description" content="{{block "description" .}}a personal garden — movies, tv, books and places i've enjoyed or want to.{{end}}" />
+  <meta name="theme-color" content="#91b47d" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/style.css" />
@@ -14,7 +15,7 @@
 
   <header class="masthead">
     <a class="brand" href="/">
-      <span class="sprout">🧑‍🌾</span><span>garden<span class="dim">.anto.pt</span></span>
+      <span class="sprout" aria-hidden="true">🧑‍🌾</span><span>garden<span class="dim">.anto.pt</span></span>
     </a>
     {{block "crumbs" .}}{{end}}
   </header>
@@ -24,7 +25,7 @@
   </main>
 
   <footer class="foot">
-    <nav>
+    <nav aria-label="Elsewhere">
       <a href="https://github.com/pitasi">github</a>
       <a href="https://bsky.app/anto.pt">bluesky</a>
       <a href="https://anto.ph">photos</a>
