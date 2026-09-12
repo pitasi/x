@@ -93,7 +93,7 @@ func TestHomeTemplate(t *testing.T) {
 		Tags:     []TagCount{{Name: "madrid", Count: 1}, {Name: "street", Count: 3}},
 		Total:    3,
 	})
-	for _, want := range []string{"# top pic(k)s", "#b424", "selected by hand", "tagwall", "23mm f/2"} {
+	for _, want := range []string{"favourites, lately", "#b424", "changed on a whim", "tagwall", "23mm f/2"} {
 		if !strings.Contains(body, want) {
 			t.Errorf("home: missing %q in body", want)
 		}
@@ -111,7 +111,7 @@ func TestAllTemplate(t *testing.T) {
 		},
 		Total: 3,
 	})
-	for _, want := range []string{"all photos", "2025", "2024", "ls -t ~/photos", "#b424"} {
+	for _, want := range []string{"the whole roll", "2025", "2024", "dust and all", "#b424"} {
 		if !strings.Contains(body, want) {
 			t.Errorf("all: missing %q in body", want)
 		}
@@ -145,7 +145,7 @@ func TestImageTemplate(t *testing.T) {
 		BackLabel: "selected",
 	})
 	for _, want := range []string{
-		"exif · #b424", "fujifilm x100v", "iso 400", "f/2.8",
+		"notes from the camera", "fujifilm x100v", "iso 400", "f/2.8",
 		"/pic/2025-07-02_17:14:32_b424/w_2500.webp",
 		"/pic/2025-07-02_17:14:32_b424/w_1200.webp",
 		"← selected", "older ›",

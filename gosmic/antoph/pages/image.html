@@ -72,7 +72,7 @@
     </div>
 
     <aside class="rail" aria-label="Photo metadata">
-      <p class="railhead">exif · #{{ .ShortID }}</p>
+      <p class="railhead">notes from the camera</p>
       <dl class="exif">
         <div><dt>date</dt><dd>{{ .Meta.Date.Format "2006-01-02" }}</dd></div>
         <div><dt>time</dt><dd class="mono-num">{{ .Meta.Date.Format "15:04:05" }}</dd></div>
@@ -85,7 +85,7 @@
       </dl>
 
       {{ if .Meta.Keywords }}
-      <p class="railhead" style="margin-top:18px">tags</p>
+      <p class="railhead railhead-tags">tags</p>
       <div class="railtags">
         {{ range .Meta.Keywords }}<a href="/tags/{{ . }}/">#{{ . }}</a>{{ end }}
       </div>

@@ -12,12 +12,12 @@
 
 <main id="view" tabindex="-1" class="wrap">
   <div class="view-head">
-    <h1>all photos</h1>
+    <h1>the whole roll</h1>
     <span class="count">{{ .Total }} frames · {{ len .Sections }} years</span>
     <span class="spacer"></span>
-    <span class="ascii">$ ls -t ~/photos</span>
+    <span class="ascii">newest first, dust and all</span>
   </div>
-  <p class="lede">The complete roll, newest first — a contact-sheet log of everywhere the camera's been.</p>
+  <p class="lede">Every frame I've kept, newest first — a contact-sheet diary of everywhere the camera's been.</p>
 
   {{ range .Sections }}
   <section>

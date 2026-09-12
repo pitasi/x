@@ -12,12 +12,12 @@
 
 <main id="view" tabindex="-1" class="wrap">
   <div class="view-head">
-    <h1># top pic(k)s</h1>
-    <span class="count">{{ len .Featured }} selected</span>
+    <h1>favourites, lately</h1>
+    <span class="count">{{ len .Featured }} on the wall</span>
     <span class="spacer"></span>
-    <span class="ascii">selected by hand, not by algorithm</span>
+    <span class="ascii">picked by me, changed on a whim</span>
   </div>
-  <p class="lede">A rotating edit of frames I keep coming back to. The full roll lives in <a href="/all">/all</a> — {{ .Total }} photos and counting.</p>
+  <p class="lede">The frames I'd pin above my desk. The rest of the roll lives in <a href="/all">the archive</a> — {{ .Total }} photos and counting.</p>
 
   <div class="sheet">
     {{ range $i, $img := .Featured }}
@@ -45,7 +45,7 @@
   </div>
 
   {{ if .Tags }}
-  <p class="section-label">browse by place &amp; tag</p>
+  <p class="section-label">places &amp; little themes</p>
   <nav class="tagwall" aria-label="Tags">
     {{ range .Tags }}<a href="/tags/{{ .Name }}/">#{{ .Name }}<span class="n">{{ .Count }}</span></a>{{ end }}
   </nav>
