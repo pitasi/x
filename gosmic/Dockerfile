@@ -8,7 +8,7 @@ RUN --mount=type=bind,source=.,target=.,readonly \
     --mount=type=cache,target=/go/pkg/mod \
     go build -o /app .
 
-FROM alpine:3.21
+FROM alpine:3.24
 RUN apk add --no-cache --virtual mailcap
 COPY --from=build-env /app /usr/bin/app
 CMD ["app"]
