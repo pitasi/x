@@ -1,0 +1,16 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["dockerfile", "gomod", "npm"],
+  "includePaths": [
+    "atproto-exporter/**",
+    "garden/**",
+    "gosmic/**",
+    "notifier/**",
+    "obsidian/clipper-server/**",
+    "togo/**",
+    "togo-example/**"
+  ],
+  "automerge": false,
+  "minimumReleaseAge": "3 days"
+}
