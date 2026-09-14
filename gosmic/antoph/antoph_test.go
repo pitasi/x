@@ -164,7 +164,7 @@ func TestSharedStyles(t *testing.T) {
 		baseData: baseData{Route: "home", Path: "/"},
 		Featured: sampleImgs(),
 	})
-	for _, want := range []string{"@view-transition", "document.prerendering"} {
+	for _, want := range []string{"@view-transition", `data-goatcounter="https://stats.anto.ph/count"`, `src="//stats.anto.ph/count.js"`} {
 		if !strings.Contains(body, want) {
 			t.Errorf("shared chrome: missing %q in body", want)
 		}

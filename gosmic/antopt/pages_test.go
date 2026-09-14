@@ -46,6 +46,7 @@ func TestSharedPagesAndColorPreference(t *testing.T) {
 				`aria-pressed="true"`, `--background: #ff91bc`,
 				`href="/articles/feed.atom"`, `href="/colophon"`,
 				`href="/static/images/favicon-antonio.png?v=`, `rel="apple-touch-icon"`,
+				`data-goatcounter="https://stats.anto.pt/count"`, `src="//stats.anto.pt/count.js"`,
 			} {
 				if !strings.Contains(body, want) {
 					t.Errorf("missing %q", want)

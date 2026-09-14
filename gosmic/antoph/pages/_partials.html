@@ -7,24 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script>
-  // Defer Plausible until the page is actually shown — prerendered pages
-  // shouldn't count as a view until the user activates them.
-  (function(){
-    function load(){
-      var s = document.createElement('script');
-      s.defer = true;
-      s.setAttribute('data-domain', 'anto.ph');
-      s.src = '/js/ps.js';
-      document.head.appendChild(s);
-    }
-    if (document.prerendering) {
-      document.addEventListener('prerenderingchange', load, { once: true });
-    } else {
-      load();
-    }
-  })();
-</script>
+<script data-goatcounter="https://stats.anto.ph/count"
+        async src="//stats.anto.ph/count.js"></script>
 {{ end }}
 
 {{ define "ap.styles" }}

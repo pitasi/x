@@ -66,7 +66,6 @@ func (ws *Website) Register(devmode bool) http.Handler {
 	ws.articles(t, mux)
 	ws.colophon(t, mux)
 	ws.cv(t, mux)
-	ws.plausible(mux)
 	ws.redirects(mux)
 	ws.uses(t, mux)
 	ws.x(mux)

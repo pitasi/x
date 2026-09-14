@@ -19,7 +19,6 @@ import (
 
 	"anto.pt/x/gosmic/fsx"
 	"anto.pt/x/gosmic/httpx"
-	"anto.pt/x/gosmic/plausible"
 	"anto.pt/x/gosmic/templates"
 )
 
@@ -625,9 +624,6 @@ func (Website) Register(devmode bool) http.Handler {
 			http.ServeFile(w, r, path.Join(photodbPath, id, name))
 		})
 	}
-
-	mux.Handle("GET /js/ps.js", plausible.Proxy)
-	mux.Handle("POST /api/event", plausible.Proxy)
 
 	return mux
 }
