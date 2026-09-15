@@ -6,13 +6,13 @@ require (
 	anto.pt/x/log v0.0.0-20250521134508-844ee6a9d901
 	anto.pt/x/socialimg v0.0.0-20250508114621-c78b65a0270c
 	github.com/prometheus/client_golang v1.22.0
-	github.com/yuin/goldmark v1.7.11
-	go.abhg.dev/goldmark/frontmatter v0.2.0
+	github.com/yuin/goldmark v1.7.13
+	go.abhg.dev/goldmark/frontmatter v0.3.0
 	golang.org/x/image v0.27.0
 )
 
 require (
-	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/disintegration/imaging v1.6.2 // indirect
