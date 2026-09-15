@@ -1,11 +1,11 @@
 module anto.pt/x/togo
 
-go 1.24.0
+go 1.26.0
 
 require (
 	github.com/yuin/goldmark v1.7.8
 	go.abhg.dev/goldmark/frontmatter v0.2.0
-	golang.org/x/tools v0.31.0
+	golang.org/x/tools v0.50.0
 )
 
 require (
