@@ -1,6 +1,6 @@
 module anto.pt/x/gosmic
 
-go 1.24.3
+go 1.26.0
 
 require (
 	anto.pt/x/log v0.0.0-20250521134508-844ee6a9d901
@@ -8,7 +8,7 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/yuin/goldmark v1.7.11
 	go.abhg.dev/goldmark/frontmatter v0.2.0
-	golang.org/x/image v0.27.0
+	golang.org/x/image v0.46.0
 )
 
 require (
@@ -23,7 +23,7 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.62.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
