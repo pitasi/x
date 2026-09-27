@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	anto.pt/x/log v0.0.0-20250521134508-844ee6a9d901
-	anto.pt/x/socialimg v0.0.0-20260914151553-44f57945b11f
+	anto.pt/x/socialimg v0.0.0-20260927112212-7a3d271c71a2
 	github.com/prometheus/client_golang v1.22.0
 	github.com/yuin/goldmark v1.7.11
 	go.abhg.dev/goldmark/frontmatter v0.2.0
