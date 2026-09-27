@@ -1,13 +1,16 @@
 package antopt
 
 import (
+	"bytes"
 	"fmt"
+	"image/color"
 	"net/http"
 
 	"anto.pt/x/gosmic/antopt/articles"
 	"anto.pt/x/gosmic/antopt/pages"
 	"anto.pt/x/gosmic/templates"
 	"anto.pt/x/socialimg"
+	"golang.org/x/image/font/gofont/gobold"
 )
 
 func (ws *Website) articles(t *templates.T, mux *http.ServeMux) {
@@ -18,17 +21,23 @@ func (ws *Website) articles(t *templates.T, mux *http.ServeMux) {
 		pages.RenderIndex(t, w, ws.common(r), articlesList)
 	})
 
-	propic, err := s.Open("static/images/propic_nobg.png")
+	avatar, err := s.Open("static/images/antonio.webp")
 	if err != nil {
-		panic(fmt.Sprintf("can't open propic_nobg.png: %s", err))
+		panic(fmt.Sprintf("can't open antonio.webp: %s", err))
 	}
 
-	font, err := s.Open("static/fonts/PPWriter-Bold.ttf")
-	if err != nil {
-		panic(fmt.Sprintf("can't open propic_nobg.png: %s", err))
-	}
-
-	coverGenerator, err := socialimg.NewGenerator(font, propic)
+	coverGenerator, err := socialimg.NewGenerator(socialimg.Config{
+		Font:   bytes.NewReader(gobold.TTF),
+		Avatar: avatar,
+		Theme: socialimg.Theme{
+			Background:       color.RGBA{R: 0xb9, G: 0xb5, B: 0xff, A: 0xff},
+			GradientFrom:     color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
+			GradientTo:       color.RGBA{R: 0xf0, G: 0xf1, B: 0xff, A: 0xff},
+			Title:            color.RGBA{R: 0x20, G: 0x23, B: 0x42, A: 0xff},
+			Subtitle:         color.RGBA{R: 0x50, G: 0x54, B: 0x6b, A: 0xff},
+			AvatarBackground: color.RGBA{R: 0xff, G: 0x91, B: 0xbc, A: 0xff},
+		},
+	})
 	if err != nil {
 		panic(fmt.Sprintf("can't create cover generator: %s", err))
 	}
