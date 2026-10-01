@@ -3,7 +3,7 @@ module anto.pt/x/gosmic
 go 1.26.0
 
 require (
-	anto.pt/x/log v0.0.0-20250521134508-844ee6a9d901
+	anto.pt/x/log v0.0.0-20260927125523-cb8406e589d3
 	anto.pt/x/socialimg v0.0.0-20260927112212-7a3d271c71a2
 	github.com/prometheus/client_golang v1.22.0
 	github.com/yuin/goldmark v1.7.11
