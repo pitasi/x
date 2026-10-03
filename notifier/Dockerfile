@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.23-alpine3.20 AS build-env
+FROM golang:1.24-alpine3.20 AS build-env
 WORKDIR /build
 ENV CGO_ENABLED=0
 RUN --mount=type=bind,source=.,target=.,readonly \
