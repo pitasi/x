@@ -64,11 +64,18 @@ type response struct{ MediaContainer *container }
 var numeric = regexp.MustCompile(`^[0-9]+$`)
 var historyID = regexp.MustCompile(`^/status/sessions/history/([0-9]+)$`)
 
-func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (Result, error) {
-	result := Result{ConfigID: p.ConfigID()}
+func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (result Result, err error) {
+	operation := "interval_validation"
+	defer func() {
+		if err != nil {
+			err = source.WithOperation(operation, err)
+		}
+	}()
+	result = Result{ConfigID: p.ConfigID()}
 	if !start.Before(end) {
 		return result, errors.New("interval")
 	}
+	operation = "identity"
 	var identity response
 	if _, err := p.client.JSON(ctx, "/identity", nil, nil, &identity); err != nil {
 		return result, err
@@ -76,6 +83,7 @@ func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (Result, err
 	if identity.MediaContainer == nil || identity.MediaContainer.MachineIdentifier == "" {
 		return result, errors.New("identity")
 	}
+	operation = "accounts"
 	var accounts response
 	if _, err := p.client.JSON(ctx, "/accounts", nil, nil, &accounts); err != nil {
 		return result, err
@@ -99,6 +107,7 @@ func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (Result, err
 	enrichment := map[string]item{}
 	offset, total := 0, -1
 	for page := 0; page < source.MaxPages; page++ {
+		operation = fmt.Sprintf("history_page_%d", page)
 		var data response
 		// The operators are part of the query key; Values.Encode adds the final '='.
 		q := url.Values{"accountID": {strconv.FormatInt(uid, 10)}, "viewedAt>": {strconv.FormatInt(start.Unix(), 10)}, "viewedAt<": {strconv.FormatInt(end.Unix(), 10)}, "sort": {"viewedAt:asc"}}

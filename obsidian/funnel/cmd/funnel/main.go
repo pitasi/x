@@ -15,9 +15,22 @@ import (
 	"anto.pt/x/obsidian/funnel/internal/brief"
 	"anto.pt/x/obsidian/funnel/internal/dawarich"
 	"anto.pt/x/obsidian/funnel/internal/plex"
+	"anto.pt/x/obsidian/funnel/internal/source"
 )
 
 const help = "Funnel: generated weekly memory cues.\nUsage: funnel sync --vault PATH [--week YYYY-Www] [--dry-run]\nBoth Dawarich and Plex environment configurations are required.\nExit: 0 fresh, 2 safely degraded, 1 fatal.\n"
+
+func reportSourceFailure(diagnostics io.Writer, week, name string, err error) {
+	failure := source.WithOperation("refresh", err)
+	fmt.Fprintf(diagnostics, "funnel: source refresh failed week=%s source=%s operation=%s category=%s", week, name, failure.Operation, failure.Category)
+	if failure.Attempts > 0 {
+		fmt.Fprintf(diagnostics, " attempts=%d", failure.Attempts)
+	}
+	if failure.HTTPStatus > 0 {
+		fmt.Fprintf(diagnostics, " http_status=%d", failure.HTTPStatus)
+	}
+	fmt.Fprintln(diagnostics)
+}
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -87,6 +100,12 @@ func run(ctx context.Context, args []string, env func(string) string, now time.T
 		var cues []brief.Cue
 		pr, pe := p.Fetch(ctx, start, end)
 		dr, de := d.Fetch(ctx, start, end)
+		if pe != nil {
+			reportSourceFailure(diagnostics, w.Name, "plex", pe)
+		}
+		if de != nil {
+			reportSourceFailure(diagnostics, w.Name, "dawarich", de)
+		}
 		if ctx.Err() != nil {
 			return fatal("cancelled")
 		}

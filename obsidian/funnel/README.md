@@ -32,7 +32,7 @@ Event-local timezone evidence wins when available; these verified transport sche
 
 A complete successful response replaces one source/week, including valid empty results. Failure keeps its previous cue blocks verbatim and labels them stale; uncovered days are unavailable. First-run failure is unavailable, never proof of no activity. Freshness/coverage/identity metadata and cue text live only in the Markdown; there is no hidden history cache. Account identity fingerprints are not anonymization. During an outage, an unverified account is explicitly labelled; known mismatches are refused. Delete generated output only if you accept losing that stale fallback.
 
-Normal stdout contains only changed relative paths, one per line. Diagnostics go to stderr without titles, coordinates, source URLs, response bodies, or tokens. Later successful checks update freshness timestamps even if cue text is unchanged.
+Normal stdout contains only changed relative paths, one per line. On source failure, stderr reports the week, source, operation, sanitized category, retry-attempt count, and HTTP status when available; it never prints request URLs, query parameters, response bodies, titles, coordinates, or tokens. Later successful checks update freshness timestamps even if cue text is unchanged.
 
 | Exit | Meaning |
 |---|---|

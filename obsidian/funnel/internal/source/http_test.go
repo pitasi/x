@@ -2,6 +2,7 @@ package source
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -30,6 +31,51 @@ func TestTransportBoundsAuthenticationAndCancellation(t *testing.T) {
 	cancel()
 	if _, err := c.JSON(ctx, "/", nil, nil, &struct{}{}); err == nil {
 		t.Fatal("cancellation ignored")
+	}
+}
+
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
+
+func TestTransportNetworkFailureReportsAttempts(t *testing.T) {
+	attempts := 0
+	client := &http.Client{Transport: roundTripFunc(func(*http.Request) (*http.Response, error) {
+		attempts++
+		return nil, errors.New("sensitive transport error")
+	})}
+	c, err := New("https://example.invalid", "secret-sentinel", "Authorization", client)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = c.JSON(context.Background(), "/", nil, nil, &struct{}{})
+	var failure *Failure
+	if !errors.As(err, &failure) || failure.Category != "network" || failure.Attempts != 4 || failure.HTTPStatus != 0 {
+		t.Fatalf("unexpected failure details: %#v", failure)
+	}
+	if attempts != 4 || strings.Contains(err.Error(), "sensitive") || strings.Contains(err.Error(), "secret-sentinel") {
+		t.Fatalf("unsafe or inaccurate diagnostic: attempts=%d err=%v", attempts, err)
+	}
+}
+
+func TestTransportFailureReportsSanitizedRetryDetails(t *testing.T) {
+	attempts := 0
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		attempts++
+		http.Error(w, "sensitive response body", http.StatusServiceUnavailable)
+	}))
+	defer server.Close()
+	c, err := New(server.URL, "secret-sentinel", "Authorization", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = c.JSON(context.Background(), "/", nil, nil, &struct{}{})
+	var failure *Failure
+	if !errors.As(err, &failure) || failure.Category != "http" || failure.HTTPStatus != 503 || failure.Attempts != 4 {
+		t.Fatalf("unexpected failure details: %#v, err=%v", failure, err)
+	}
+	if attempts != 4 || strings.Contains(err.Error(), "sensitive") || strings.Contains(err.Error(), "secret-sentinel") {
+		t.Fatalf("unsafe or inaccurate diagnostic: attempts=%d err=%v", attempts, err)
 	}
 }
 

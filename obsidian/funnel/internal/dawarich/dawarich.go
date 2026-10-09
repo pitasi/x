@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"net/http"
 	"net/url"
@@ -63,11 +64,18 @@ type visit struct {
 	Place        struct{ Latitude, Longitude *coordinate }
 }
 
-func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (Result, error) {
-	result := Result{ConfigID: p.ConfigID()}
+func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (result Result, err error) {
+	operation := "interval_validation"
+	defer func() {
+		if err != nil {
+			err = source.WithOperation(operation, err)
+		}
+	}()
+	result = Result{ConfigID: p.ConfigID()}
 	if !start.Before(end) {
 		return result, errors.New("interval")
 	}
+	operation = "users_me"
 	var me struct{ User struct{ Email string } }
 	if _, err := p.client.JSON(ctx, "/api/v1/users/me", nil, nil, &me); err != nil {
 		return result, err
@@ -80,6 +88,7 @@ func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (Result, err
 	pages, total, count := -1, -1, 0
 	var user int64
 	for page := 1; page <= source.MaxPages; page++ {
+		operation = fmt.Sprintf("visits_page_%d", page)
 		var rows []visit
 		q := url.Values{"start_at": {start.UTC().Format(time.RFC3339)}, "end_at": {end.UTC().Format(time.RFC3339)}, "page": {strconv.Itoa(page)}, "per_page": {"100"}}
 		headers, err := p.client.JSON(ctx, "/api/v1/visits", q, nil, &rows)
