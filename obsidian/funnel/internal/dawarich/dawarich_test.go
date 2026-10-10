@@ -72,6 +72,29 @@ func TestVisitsStatesBoundariesAndValidation(t *testing.T) {
 	}
 }
 
+func TestCoordinateLessVisitsRemainCuesWithoutMapLinks(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/v1/users/me" {
+			fmt.Fprint(w, `{"user":{"email":"example@example.invalid"}}`)
+			return
+		}
+		w.Header().Set("X-Current-Page", "1")
+		w.Header().Set("X-Total-Pages", "1")
+		w.Header().Set("X-Total-Count", "1")
+		fmt.Fprint(w, `[{"id":1,"user_id":7,"started_at":"2024-01-02T12:00:00Z","status":"suggested","place":{"latitude":null,"longitude":null}}]`)
+	}))
+	defer server.Close()
+	p, err := New(server.URL, "token", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	result, err := p.Fetch(context.Background(), a, a.AddDate(0, 0, 7))
+	if err != nil || len(result.Cues) != 1 || result.Cues[0].MapURL != "" {
+		t.Fatalf("coordinate-less visit not retained without a map: cues=%+v err=%v", result.Cues, err)
+	}
+}
+
 func TestVisitsCompletePaginationDeduplicates(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/v1/users/me" {

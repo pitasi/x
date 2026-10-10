@@ -144,18 +144,27 @@ func (p *Provider) Fetch(ctx context.Context, start, end time.Time) (result Resu
 				}
 				until = &parsed
 			}
-			if row.Place.Latitude == nil || row.Place.Longitude == nil {
-				return result, errors.New("invalid_data")
+			var lat, lon float64
+			if row.Place.Latitude != nil {
+				lat = float64(*row.Place.Latitude)
+				if math.IsNaN(lat) || math.IsInf(lat, 0) || lat < -90 || lat > 90 {
+					return result, errors.New("invalid_data")
+				}
 			}
-			lat, lon := float64(*row.Place.Latitude), float64(*row.Place.Longitude)
-			if math.IsNaN(lat) || math.IsNaN(lon) || math.IsInf(lat, 0) || math.IsInf(lon, 0) || lat < -90 || lat > 90 || lon < -180 || lon > 180 {
-				return result, errors.New("invalid_data")
+			if row.Place.Longitude != nil {
+				lon = float64(*row.Place.Longitude)
+				if math.IsNaN(lon) || math.IsInf(lon, 0) || lon < -180 || lon > 180 {
+					return result, errors.New("invalid_data")
+				}
 			}
 			if instant.Before(start) || !instant.Before(end) {
 				continue
 			}
-			coords := strconv.FormatFloat(lat, 'f', -1, 64) + "," + strconv.FormatFloat(lon, 'f', -1, 64)
-			link := "https://www.google.com/maps/search/?" + url.Values{"api": {"1"}, "query": {coords}}.Encode()
+			var link string
+			if row.Place.Latitude != nil && row.Place.Longitude != nil {
+				coords := strconv.FormatFloat(lat, 'f', -1, 64) + "," + strconv.FormatFloat(lon, 'f', -1, 64)
+				link = "https://www.google.com/maps/search/?" + url.Values{"api": {"1"}, "query": {coords}}.Encode()
+			}
 			result.Cues = append(result.Cues, Cue{strconv.FormatInt(row.ID, 10), instant, until, row.Name, row.Status, link})
 		}
 		if page >= pages {
