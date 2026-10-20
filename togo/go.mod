@@ -3,7 +3,7 @@ module anto.pt/x/togo
 go 1.24.0
 
 require (
-	github.com/yuin/goldmark v1.7.8
+	github.com/yuin/goldmark v1.8.6
 	go.abhg.dev/goldmark/frontmatter v0.2.0
 	golang.org/x/tools v0.31.0
 )
