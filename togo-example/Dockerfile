@@ -1,4 +1,4 @@
-FROM golang:1.24.1-alpine3.21@sha256:43c094ad24b6ac0546c62193baeb3e6e49ce14d3250845d166c77c25f64b0386 AS build
+FROM golang:1.25.5-alpine3.21@sha256:b4dbd292a0852331c89dfd64e84d16811f3e3aae4c73c13d026c4d200715aff6 AS build
 WORKDIR /src/togo
 COPY togo/go.mod togo/go.sum ./
 RUN go mod download
