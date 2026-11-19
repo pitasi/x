@@ -4,14 +4,12 @@ import (
 	"embed"
 	"html/template"
 	"net/http"
-	"os"
 	"runtime/debug"
 	"strings"
 
 	"anto.pt/x/log"
 
 	"anto.pt/x/gosmic/antopt/components"
-	"anto.pt/x/gosmic/antopt/lastfm"
 	"anto.pt/x/gosmic/antopt/pages"
 	"anto.pt/x/gosmic/fsx"
 	"anto.pt/x/gosmic/httpx"
@@ -70,13 +68,7 @@ func (ws *Website) Register(devmode bool) http.Handler {
 	ws.uses(t, mux)
 	ws.x(mux)
 
-	lastfmAPIKey := os.Getenv("LASTFM_API_KEY")
-	if lastfmAPIKey != "" {
-		c := &lastfm.Client{
-			APIKey: lastfmAPIKey,
-		}
-		ws.nowPlaying(c, mux)
-	}
+	ws.nowPlaying(mux)
 
 	var h http.Handler = mux
 	h = httpx.Recoverer(h)

@@ -10,7 +10,6 @@ import (
 )
 
 func TestSharedPagesAndColorPreference(t *testing.T) {
-	t.Setenv("LASTFM_API_KEY", "")
 	ws := &Website{Colors: []template.CSS{"#b9b5ff", "#ff91bc"}}
 	h := ws.Register(false)
 
@@ -45,6 +44,7 @@ func TestSharedPagesAndColorPreference(t *testing.T) {
 				`aria-label="Primary"`, `aria-label="Choose a background color"`,
 				`aria-pressed="true"`, `--background: #ff91bc`,
 				`href="/articles/feed.atom"`, `href="/colophon"`,
+				`href="https://listenbrainz.org/user/zaphodias/"`,
 				`href="/static/images/favicon-antonio.png?v=`, `rel="apple-touch-icon"`,
 				`data-goatcounter="https://stats.anto.pt/count"`, `src="//stats.anto.pt/count.js"`,
 			} {
