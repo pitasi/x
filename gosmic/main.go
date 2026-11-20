@@ -11,6 +11,7 @@ import (
 
 	"anto.pt/x/gosmic/antoph"
 	"anto.pt/x/gosmic/antopt"
+	"anto.pt/x/gosmic/calenbar"
 	"anto.pt/x/gosmic/httpx"
 )
 
@@ -35,6 +36,7 @@ func main() {
 		},
 	}, mux)
 	httpx.RegisterWebsite("anto.ph", antoph.Website{}, mux)
+	httpx.RegisterWebsite("calenbar.anto.pt", calenbar.Website{}, mux)
 
 	handler := httpx.MetricsInc(mux)
 	handler = httpx.RewriteHost(handler)
